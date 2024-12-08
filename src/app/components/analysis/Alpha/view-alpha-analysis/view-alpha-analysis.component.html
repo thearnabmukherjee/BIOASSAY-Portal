@@ -1,0 +1,79 @@
+<div class="card" *ngIf="record">
+    <header class="card-header has-background-success">
+        <p class="card-header-title has-text-white">Alpha spectrometry analysis details: {{record.name}}</p>
+        <button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_alpha_spec_details_opened" (click)="is_alpha_spec_details_opened = !is_alpha_spec_details_opened">
+            <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </button>
+        <button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_alpha_spec_details_opened" (click)="is_alpha_spec_details_opened = !is_alpha_spec_details_opened">
+            <span class="icon">
+                <i class="fas fa-angle-up" aria-hidden="true"></i>
+            </span>
+        </button>
+    </header>
+
+    <div class="card-content" [hidden]="!is_alpha_spec_details_opened">
+        <table class="table is-bordered">
+            <tr>
+                <th>Radionuclide</th>
+                <td>{{nuclide_name}}</td>
+                <th>Isotope</th>
+                <td>{{isotope_name}}</td>
+                <th>Detector</th>
+                <td>{{detector_name}}</td>
+            </tr>
+            <tr>
+                <th>Tracer</th>
+                <td>{{tracer_name}}</td>
+                <th>Gross tracer counts</th>
+                <td>{{record.contents.gross_tracer_counts}}</td>
+                <th>Tracer background counting time</th>
+                <td>{{record.contents.tracer_bkg.time}}</td>
+            </tr>
+            <tr>
+                <th>Background</th>
+                <td>{{record.contents.sample_bkg.id}} ({{record.contents.sample_bkg.name}})</td>
+                <th>Sample background counts</th>
+                <td>{{record.contents.sample_bkg.counts}}</td>
+                <th>Background counting time</th>
+                <td>{{record.contents.sample_bkg.time}}</td>
+            </tr>
+            <tr>
+                <th>Gross sample counts</th>
+                <td>{{record.contents.gross_sample_counts}}</td>
+                <th>Sample counting time</th>
+                <td>{{record.contents.sample_counting_time}}</td>
+                <th>Sample collection duration</th>
+                <td>{{record.contents.sample_collection_time}}</td>
+            </tr>
+            <tr>
+                <th>Tracer activity spiked</th>
+                <td>{{record.contents.tracer_activity_spiked}}</td>
+                <th>Detector efficiency</th>
+                <td>{{record.contents.det_eff}}</td>
+                <th>Analysis date</th>
+                <td>{{record.analysis_date | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{record.name}}</td>
+                <th>Previous activity</th>
+                <td>{{record.contents.previous_activity}} ± {{record.contents.previous_activity_error}}</td>
+                <th>Recovery %</th>
+                <td>{{record.contents.recovery_percent}}</td>
+            </tr>
+            <tr>
+                <th>Comments</th>
+                <td>{{record.comments}}</td>
+                <th>Activity</th>
+                <td>{{record.activity}} ± {{record.activity_error}}</td>
+                <th>Is BDL?</th>
+                <td>
+                    <span *ngIf="record.is_BDL">Yes</span>
+				    <span *ngIf="!record.is_BDL">No</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

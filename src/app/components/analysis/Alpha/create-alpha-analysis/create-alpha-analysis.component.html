@@ -1,0 +1,184 @@
+<section class="">
+	<p class="title">{{title}}</p>
+
+
+	<!--	Personal details	-->
+
+	<div class="card" *ngIf="person_id > 0">
+		<header class="card-header has-background-primary">
+			<p class="card-header-title has-text-white">Personal details</p>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-down" aria-hidden="true"></i>
+				</span>
+			</button>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-up" aria-hidden="true"></i>
+				</span>
+			</button>
+		</header>
+	
+		<sub-worker-details [hidden]="!is_personal_details_opened" 
+							[person-id]="person_id" 
+							(close)="failed_to_load_worker_details($event)"></sub-worker-details>
+	</div>
+
+
+	<!--	Monitoring details	-->
+
+	<div class="card" *ngIf="mon_id > 0">
+		<header class="card-header has-background-link">
+			<p class="card-header-title has-text-white">Monitoring details</p>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-down" aria-hidden="true"></i>
+				</span>
+			</button>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-up" aria-hidden="true"></i>
+				</span>
+			</button>
+		</header>
+
+		
+		<app-view-monitoring-details [hidden]="!is_monitoring_details_opened" [monitoring-record]="monRecord"></app-view-monitoring-details>
+	</div>
+
+
+	<!--	Create Alpha analysis	-->
+
+	<div class="card">
+		<header class="card-header has-background-success">
+			<p class="card-header-title has-text-white">Alpha spectrometry analysis details</p>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_alpha_spec_details_opened" (click)="is_alpha_spec_details_opened = !is_alpha_spec_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-down" aria-hidden="true"></i>
+				</span>
+			</button>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_alpha_spec_details_opened" (click)="is_alpha_spec_details_opened = !is_alpha_spec_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-up" aria-hidden="true"></i>
+				</span>
+			</button>
+		</header>
+
+		<div class="card-content" [hidden]="!is_alpha_spec_details_opened">
+			
+			<div class="columns is-desktop">
+				<div class="column is-2">Radionuclide</div>
+				<div class="column is-2">{{nuclide_name}}</div>
+				<div class="column is-2">Isotope</div>
+				<div class="column is-2">{{isotope_name}}</div>
+				<div class="column is-2">Detector</div>
+				<div class="column is-2">{{detector_name}}</div>
+			</div>
+
+			<div class="columns is-desktop">
+				<div class="column is-2">Tracer</div>
+				<div class="column is-2">{{tracer_name}}</div>
+				<div class="column is-2">Gross tracer counts</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="gross_tracer_counts">
+				</div>
+				<div class="column is-2">Tracer background counting time</div>
+				<div class="column is-2">{{tracer_bkg_counting_time}}</div>
+			</div>
+
+
+			<div class="columns is-desktop">
+				<div class="column is-2">Background id</div>
+				<div class="column is-2">{{bkg_id}}</div>
+				<div class="column is-2">Sample background counts</div>
+				<div class="column is-2">{{bkg_counts}}</div>
+				<div class="column is-2">Background counting time</div>
+				<div class="column is-2">{{background_counting_time}}</div>
+			</div>
+
+
+			<div class="columns is-desktop">
+				<div class="column is-2">Gross sample counts</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="gross_sample_counts">
+				</div>
+				<div class="column is-2">Sample counting time</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="sample_counting_time">
+				</div>
+				<div class="column is-2">Sample collection duration</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="sample_collection_time">
+				</div>
+			</div>
+
+			<div class="columns is-desktop">
+				<div class="column is-2">Tracer activity spiked</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="tracer_activity_spiked">
+				</div>
+				<div class="column is-2">Detector efficiency</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="det_eff">
+				</div>
+				<div class="column is-2">Analysis date</div>
+				<div class="column is-2">
+					<div class="control has-icons-left">
+						<input class="input is-medium" id="dtAnalysis" type="date" placeholder="Analysis date" [(ngModel)]="analysis_date">
+					</div>
+				</div>
+			</div>
+
+			<div class="columns is-desktop">
+				<div class="column is-2">Name</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="name" maxlength="512">
+				</div>
+				<div class="column is-2">Previous activity</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="previous_activity">
+				</div>
+				<div class="column is-2">Previous activity error</div>
+				<div class="column is-2">
+					<input class="input is-primary" type="text" [(ngModel)]="previous_activity_error">
+				</div>
+			</div>
+
+
+			<div class="columns is-desktop">
+				<div class="column is-2">Comments</div>
+				<div class="column is-6">
+					<textarea class="textarea is-primary" placeholder="Analysis comments...." [(ngModel)]="comments" maxlength="512"></textarea>
+				</div>
+				<div class="column is-2">Recovery %</div>
+				<div class="column is-2">{{recovery_percent}}</div>
+			</div>
+
+			<div class="columns is-desktop">
+				<div class="column is-2">Is BDL</div>
+				<div class="column is-10">
+					<div class="field">
+						<input class="is-checkradio is-block is-success" [(ngModel)]="is_BDL" type="checkbox" name="kjsdfsdjkf" id="kjsdfsdjkf">
+						<label for="kjsdfsdjkf">Mark it BDL</label>
+					</div>
+				</div>
+			</div>
+
+			<button class="button is-primary is-light" (click)="calculate_result()" [ngClass]="{ 'is-loading': is_calculating }">Calculate</button><br/><br/>
+
+			<article class="message is-primary is-fullwidth">
+				<div class="message-body">
+					<span class="has-text-weight-bold">Calculated activity</span>&nbsp;&nbsp;
+					{{calculated_activity}} ± {{calculated_activity_error}}
+				</div>
+			</article>
+
+		</div>
+
+		<div class="card-footer">
+			<button class="button is-primary ml-3 mt-3 mb-3 mr-3" (click)="submit_result()" [ngClass]="{ 'is-loading': is_submitting }">Submit</button>
+		</div>
+
+	</div>
+
+</section>

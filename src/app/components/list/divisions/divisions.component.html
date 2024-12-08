@@ -1,0 +1,79 @@
+<section class="section" [ngClass]="{ 'is-clipped': is_open_new_division_modal }">
+    <div class="title is-2">
+        List of Divisions
+    </div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="has-text-right">
+        <button class="button is-warning" (click)="ask_for_new_division()">  Add New </button>
+    </div>
+    
+    <p class="has-text-right" *ngIf="!is_loading">{{arrDivisions.length}} record(s) found!</p>
+    
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrDivisions.length > 0 && !is_loading" >
+    
+                <tr class="has-background-primary ">
+                    <td class="has-text-white is-size-4"> Id</td>
+                    <td class="has-text-white is-size-4"> Abbreviation </td>
+                    <td class="has-text-white is-size-4"> Description </td>
+                    <td class="has-text-white is-size-4"> Created On </td>
+    
+                </tr>
+                
+                <tr *ngFor="let d of arrDivisions">
+                    <td>{{d.id}}</td>
+                    <td>{{d.abbr}}</td>
+                    <td>{{d.description}}</td>
+                    <td>{{d.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+                </tr>
+        </table>
+        <p class="is-italic" *ngIf="arrDivisions.length == 0 && !is_loading">No division found!</p>
+    </div>
+</section>
+
+
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_new_division_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<p class="subtitle">Enter division abbreviation and its description</p>
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Abbreviation</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<p class="control">
+							<input class="input" type="text" [(ngModel)]="tmp_div_abbr" placeholder="Division abbreviation..." maxlength="512">
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Description</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<p class="control">
+							<input class="input" type="text" [(ngModel)]="tmp_div_desc" placeholder="Division description..." maxlength="512">
+						</p>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div class="field is-grouped">
+				<p class="control">
+					<button class="button is-primary is-light" (click)="create_new_division()">Create division</button>
+				</p>
+				<p class="control">
+					<button class="button is-danger is-light" (click)="close_modal()">Cancel</button>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,74 @@
+<section class="section" [ngClass]="{ 'is-clipped': is_open_new_process_type }">
+
+	<div class="title is-2">
+		List of Process types
+	</div>
+
+	<progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+	<p *ngIf="is_loading">Loading. Please wait.....</p>
+
+	<div class="has-text-right" >
+		<button class="button is-warning" (click)="ask_for_new_type()">  Add New </button>
+	</div>
+
+	<p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+	<div class="table-container" >
+
+		<table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+
+				<tr class="has-background-primary">
+					<td class="has-text-white is-size-4"> Id</td>
+					<td class="has-text-white is-size-4"> Description </td>
+					<td class="has-text-white is-size-4"> Enabled? </td>
+					<td class="has-text-white is-size-4"> Action </td>
+				</tr>
+				
+				<tr *ngFor="let r of arrRecords">
+					<td>{{r.id}}</td>
+					<td>{{r.desc}}</td>
+					<td>
+						<span *ngIf="r.is_active">Yes</span>
+						<span *ngIf="!r.is_active">No</span>
+					</td>
+					<td>
+						<button class="button is-primary is-light" *ngIf="!r.is_active" (click)="change_state(r.id, true)">Enable</button>
+						<button class="button is-danger is-light" *ngIf="r.is_active" (click)="change_state(r.id, false)">Disable</button>
+					</td>
+				</tr>
+
+		</table>
+
+		<p class="is-italic" *ngIf="arrRecords.length == 0 && !is_loading">No process type found!</p>
+	</div>
+</section>
+
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_new_process_type }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<p class="subtitle">Enter process type description</p>
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Description</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<p class="control">
+							<input class="input" type="text" [(ngModel)]="tmp_process_type" placeholder="Description ..." maxlength="512">
+						</p>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div class="field is-grouped">
+				<p class="control">
+					<button class="button is-primary is-light" (click)="create_new_process_type()">Create process type</button>
+				</p>
+				<p class="control">
+					<button class="button is-danger is-light" (click)="close_modal()">Cancel</button>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

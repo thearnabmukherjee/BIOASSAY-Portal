@@ -1,0 +1,44 @@
+<section>
+    <p *ngIf="is_loading">Loading...</p>
+    <div class="columns is-gapless" *ngFor="let p of arrWorkers" (click)="worker_clicked(p)" [ngClass]="{ 'has-background-primary-light': selected_person_id == p.id }">
+        <div class="column is-5" [ngClass]="{ 'has-background-primary': selected_person_id == p.id }">
+            <img [src]="p.photo_url" />
+        </div>
+        <div class="column is-7">
+            <table class="table is-borderless is-narrow is-fullwidth">
+                <tr [ngClass]="{ 'is-selected': selected_person_id == p.id }">
+                    <th>Name</th>
+                    <td>{{p.name}}</td>
+                </tr>
+                <tr [ngClass]="{ 'is-selected': selected_person_id == p.id }">
+                    <th>Employee?</th>
+                    <td>
+                        <span *ngIf="p.is_worker">No</span>
+                        <span *ngIf="!p.is_worker">Yes</span>
+                    </td>
+                </tr>
+                <tr [ngClass]="{ 'is-selected': selected_person_id == p.id }">
+                    <th>Emp no.</th>
+                    <td>{{p.empno}}</td>
+                </tr>
+                <tr [ngClass]="{ 'is-selected': selected_person_id == p.id }">
+                    <th>Org.</th>
+                    <td>{{p.firm_name}}</td>
+                </tr>
+                <tr [ngClass]="{ 'is-selected': selected_person_id == p.id }">
+                    <th>DOB</th>
+                    <td>{{p.dob}}</td>
+                </tr>
+                <tr [ngClass]="{ 'is-selected': selected_person_id == p.id }">
+                    <th>DOJ</th>
+                    <td>{{p.doj}}</td>
+                </tr>
+                <tr [ngClass]="{ 'is-selected': selected_person_id == p.id }">
+                    <th>Gender</th>
+                    <td>{{p.gender}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <p *ngIf="!is_loading && arrWorkers.length == 0">No record found!</p>
+</section>

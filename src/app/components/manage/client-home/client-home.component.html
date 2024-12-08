@@ -1,0 +1,15 @@
+<section class="">
+	<div class="columns">
+		<div class="column is-4">
+			<div class="box">
+				<app-search (searched)="search_performed($event)"></app-search>
+			</div>
+			<hr/>
+			<app-workers-list [search-val]="worker_filter" (person-selected)="worker_selected($event)"></app-workers-list>
+		</div>
+		<div class="column is-8">
+			<p class="subtitle">{{right_message}}</p>
+			<app-mon-list [selected-person]="selected_person"></app-mon-list>
+		</div>
+	</div>
+</section>

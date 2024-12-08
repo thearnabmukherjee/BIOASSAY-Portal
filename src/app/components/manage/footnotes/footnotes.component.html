@@ -1,0 +1,98 @@
+<section class="section">
+    <div class="title is-2">
+        List of Footnotes
+    </div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="has-text-right">
+        <button class="button is-warning" [ngClass]="{ 'is-loading': is_creating }" (click)="open_modal()">Add New</button>
+    </div>
+    
+    <p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+    
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+    
+                <tr class="has-background-primary ">
+                    <td class="has-text-white is-size-4"> Id</td>
+                    <td class="has-text-white is-size-4"> Name </td>
+					<td class="has-text-white is-size-4"> Is enabled? </td>
+                    <td class="has-text-white is-size-4"> Contents </td>
+                    <td class="has-text-white is-size-4"> Created on </td>
+                    <td class="has-text-white is-size-4"> Created by </td>
+                </tr>
+                
+                <tr *ngFor="let d of arrRecords">
+                    <td>{{d.id}}</td>
+                    <td>{{d.name}}</td>
+					<td>
+                        <span *ngIf="d.is_active">Yes</span>
+                        <span *ngIf="!d.is_active">No</span>
+
+                        &nbsp;
+                        <button class="button is-danger is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="d.is_active" (click)="enable_disable_footnote(d.id, false)">De-activate</button>
+                        <button class="button is-primary is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="!d.is_active" (click)="enable_disable_footnote(d.id, true)">Activate</button>
+                    </td>
+                    <td class="has-text-justified">
+                        {{shorten_contents(d.contents, 100)}} &nbsp;&nbsp;
+                        <button class="button is-primary is-small" *ngIf="d.contents.length > 100" (click)="open_contents_modal(d.contents)">View</button>
+                    </td>
+                    <td>{{d.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+                    <td>{{d.created_by_name}}</td>
+                </tr>
+        </table>
+        <p class="is-italic" *ngIf="arrRecords.length == 0 && !is_loading">No footnote found!</p>
+    </div>
+</section>
+
+
+
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_create_modal }" *ngIf="is_open_create_modal">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			
+            <p class="title">New footnote</p>
+
+            <!--    Name    -->
+
+            <div class="columns">
+                <div class="column is-4">Name</div>
+                <div class="column is-8">
+                    <input class="input is-primary is-fullwidth" type="text" placeholder="Footnote name" [(ngModel)]="footnote_name" maxlength="200">
+                </div>
+            </div><br/>
+
+            <!--    Contents   -->
+
+            <div class="columns">
+                <div class="column is-4">Contents</div>
+                <div class="column is-8">
+                    <textarea class="textarea is-primary is-fullwidth" placeholder="Footnote contents"  [(ngModel)]="footnote_contents" maxlength="2000"></textarea>
+                </div>
+            </div><br/>
+
+			<button class="button is-danger is-pulled-left" [ngClass]="{ 'is-loading': is_creating }" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" [ngClass]="{ 'is-loading': is_creating }" (click)="create_new_footnote()">Create</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>
+
+
+<!--    View contents    -->
+
+<div class="modal" [ngClass]="{ 'is-active': is_view_contents_modal_open }" *ngIf="is_view_contents_modal_open">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box has-text-justified">
+            {{footnote_contents}}
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>

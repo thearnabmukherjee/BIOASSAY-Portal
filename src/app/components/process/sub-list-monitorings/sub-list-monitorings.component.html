@@ -1,0 +1,100 @@
+
+<!--	Elements above the table	-->
+
+<p class="is-italic is-pulled-right">Showing {{arrRecords.length}} records on page {{(page_num+1)}}</p>
+<br/>
+<p class="buttons is-pulled-right">
+	<button class="button is-primary is-light" title="Goto first page" [attr.disabled]="page_num == 0 ? true : null" (click)="goto_first_page()">
+		<span class="icon is-small">
+			<i class="fas fa-angle-double-left"></i>
+		</span>
+	</button>
+	<button class="button is-primary is-light" title="Goto previous page" [attr.disabled]="page_num == 0 ? true : null" (click)="goto_previous_page()">
+		<span class="icon is-small">
+			<i class="fas fa-angle-left"></i>
+		</span>
+	</button>
+	<button class="button is-primary is-light" title="Goto next page" [attr.disabled]="arrRecords.length == 0 ? true : null" (click)="goto_next_page()">
+		<span class="icon is-small">
+			<i class="fas fa-angle-right"></i>
+		</span>
+	</button>
+</p><br/><br/><br/>
+<progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+<p *ngIf="is_loading">Loading. Please wait.....</p>
+
+
+<!--	List of 10H forms table	-->
+<div class="table-container">
+	<table class="table is-striped is-fullwidth is-hoverable" *ngIf="arrRecords.length > 0" >
+		<thead>
+			<tr class="has-background-primary ">
+				<td class="has-text-white is-size-4"> Id</td>
+				<td class="has-text-white is-size-4"> Sample # </td>
+				<td class="has-text-white is-size-4"> Sample vol. (ml)</td>
+				<td class="has-text-white is-size-4"> Sample wt. (g)</td>
+				<td class="has-text-white is-size-4"> 10H form </td>
+				<td class="has-text-white is-size-4"> Worker </td>
+				<td class="has-text-white is-size-4"> Received on </td>
+				<td class="has-text-white is-size-4"> Submitted on </td>
+				<td class="has-text-white is-size-4"> Submitted by </td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let r of arrRecords">
+				<td>{{r.id}}</td>
+				<td>{{r.sample_no}}</td>
+				<td>
+					<span *ngIf="r.sample_vol != null && r.sample_vol > 0">{{r.sample_vol}}</span>
+					<span *ngIf="r.sample_vol == null || r.sample_vol <= 0">NA</span>
+				</td>
+				<td>
+					<span *ngIf="r.sample_weight != null && r.sample_weight > 0">{{r.sample_weight}}</span>
+					<span *ngIf="r.sample_weight == null || r.sample_weight <= 0">NA</span>
+				</td>
+
+				<td>
+					<button class="button is-link is-inverted" (click)="view_10H_form(r.form_id)">View</button>
+				</td>
+
+				<td>
+					<button class="button is-primary is-inverted" (click)="view_worker_details(r.person_id)">{{r.person_name}}</button>
+				</td>
+
+				<td>
+					{{r.received_on}}
+				</td>
+
+				<td>
+					{{r.created_on}}
+				</td>
+
+				<td>
+					{{r.created_by_name}}
+				</td>
+
+				<td class="field is-grouped">
+					<p class="control">
+						<button class="button is-success is-small mr-1" (click)="view_analysis(r.id, r.person_id)">Analysis</button>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="is-italic" *ngIf="arrRecords.length == 0 && !is_loading">No monitoring found!</p>
+</div>
+
+
+
+<!--	Show worker details modal	-->
+<div class="modal" [ngClass]="{ 'is-active': selected_worker_id > 0 }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="card">
+			<sub-worker-details [person-id]="selected_worker_id" (close)="worker_details_closed($event)"></sub-worker-details>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="worker_details_closed($event)"></button>
+</div>
+

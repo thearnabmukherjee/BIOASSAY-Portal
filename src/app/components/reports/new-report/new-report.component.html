@@ -1,0 +1,154 @@
+<section *ngIf="!is_open_people_selector">
+	<p class="subtitle has-text-primary">{{selected_report_type}}</p>
+
+	<!--	Worker type	and division-->
+
+	<div class="columns">
+		<div class="column is-2">Worker type</div>
+		<div class="column is-4">
+			<div class="select is-primary is-fullwidth">
+				<select [(ngModel)]="selected_worker_type">
+					<option *ngFor="let w of VALID_WORKER_TYPES" [value]="w">{{w}}</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="column is-2">Division</div>
+		<div class="column is-4">
+			<div class="select is-primary is-fullwidth">
+				<select [(ngModel)]="selected_divison_id">
+					<option *ngFor="let d of arrDivisions" [value]="d.id">{{d.abbr}}</option>
+				</select>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!--	Start and end date	-->
+
+	<div class="columns">
+		<div class="column is-2">
+			Start date
+		</div>
+		<div class="column is-4">
+			<input class="input is-medium" id="dtReportStartDate" type="date" placeholder="Start date" [(ngModel)]="selected_start_date">
+		</div>
+		<div class="column is-2">
+			End date
+		</div>
+		<div class="column is-4">
+			<input class="input is-medium" id="dtReportEndDate" type="date" placeholder="End date" [(ngModel)]="selected_end_date">
+		</div>
+	</div>
+
+
+	<!--	Name and footnote	-->
+
+	<div class="columns">
+		<div class="column is-2">Name</div>
+		<div class="column is-4">
+			<input class="input is-primary is-fullwidth" type="text" placeholder="Report name" [(ngModel)]="selected_report_name" maxlength="200" />
+		</div>
+
+		<div class="column is-2">Footnote</div>
+		<div class="column is-4">
+			<div class="select is-primary is-fullwidth">
+				<select [(ngModel)]="selected_footnote_id">
+					<option *ngFor="let d of arrFootnotes" [value]="d.id">{{d.name}}</option>
+				</select>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!--	Send to and copy to	-->
+
+	<div class="columns">
+		<div class="column is-2">Send to</div>
+		<div class="column is-4">
+			<div class="columns is-gapless">
+				<div class="column is-10">
+					<input class="input is-primary is-fullwidth" type="text" placeholder="send to..." [(ngModel)]="tmp_send_to" maxlength="512" />
+				</div>
+				<div class="column is-2">
+					<button class="button" (click)="add_send_to()">
+						<span class="icon is-small has-text-primary">
+							<i class="fas fa-plus"></i>
+						</span>
+					</button>
+				</div>
+			</div>
+			<ul class="mt-2" style="list-style-type:circle">
+				<li *ngFor="let st of selected_arrSend_to">
+					{{st}} &nbsp;&nbsp;
+					<button class="button" (click)="remove_send_to(st)">
+						<span class="icon is-small has-text-danger">
+							<i class="fas fa-times"></i>
+						</span>
+					</button>
+				</li>
+			</ul>
+		</div>
+
+		<div class="column is-2">Copy to</div>
+		<div class="column is-4">
+			<div class="columns is-gapless">
+				<div class="column is-10">
+					<input class="input is-primary is-fullwidth" type="text" placeholder="copy to..." [(ngModel)]="tmp_copy_to" maxlength="512" />
+				</div>
+				<div class="column is-2">
+					<button class="button" (click)="add_copy_to()">
+						<span class="icon is-small has-text-primary">
+							<i class="fas fa-plus"></i>
+						</span>
+					</button>
+				</div>
+			</div>
+			<ul class="mt-2" style="list-style-type:circle">
+				<li *ngFor="let st of selected_arrCopy_to">
+					{{st}} &nbsp;&nbsp;
+					<button class="button" (click)="remove_copy_to(st)">
+						<span class="icon is-small has-text-danger">
+							<i class="fas fa-times"></i>
+						</span>
+					</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+
+	<!--	Comments	-->
+
+	<div class="columns">
+		<div class="column is-2">Comments</div>
+		<div class="column is-10">
+			<textarea class="textarea is-primary is-fullwidth" placeholder="Comments if any..." [(ngModel)]="selected_comments" maxlength="512"></textarea>
+		</div>
+	</div>
+	<br/>
+	<br/>
+	
+	<button class="button is-danger is-pulled-left" [ngClass]="{ 'is-loading': is_creating_report }" (click)="close_modal()">Cancel</button>
+	<button class="button is-primary is-pulled-right" [ngClass]="{ 'is-loading': is_creating_report }" (click)="verify_reports_inputs()">Proceed</button>
+	<br/>
+	<br/>
+
+</section>
+
+<section *ngIf="is_open_people_selector">
+	<app-set-chooser [raw-records]="_arr_people_to_select"
+						 [name]="selected_report_name"
+						 [worker-type]="selected_worker_type"
+						 [start-date]="selected_start_date"
+						 [end-date]="selected_end_date"
+						 [division-id]="selected_divison_id"
+						 [footnote-id]="selected_footnote_id"
+						 [send-to]="selected_arrSend_to"
+						 [copy-to]="selected_arrCopy_to"
+						 [comments]="selected_comments"
+						 [report-type]="selected_report_type"
+						 (cancel)="close_modal()"></app-set-chooser>
+</section>

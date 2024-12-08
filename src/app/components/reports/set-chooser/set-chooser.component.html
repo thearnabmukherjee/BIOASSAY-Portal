@@ -1,0 +1,38 @@
+<section class="section">
+
+    <p class="is-size-2">Sets to be included in report</p>
+
+    <table class="table is-bordered is-fullwidth">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Set name</th>
+                <th>Sample number</th>
+                <th>Person name</th>
+                <th>TLD</th>
+                <th>Collection date</th>
+                <th>Received on</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let r of arr_records">
+                <td>
+                    <input class="is-checkradio is-block is-primary" [(ngModel)]="r.is_checked" type="checkbox" [name]="r.name" [id]="r.name">
+					<label [for]="r.name">{{r.raw_record.id}}</label>
+                </td>
+                <td>{{r.raw_record.name}}</td>
+                <td>{{r.raw_record.sample_no}}</td>
+                <td>{{r.raw_record.person_name}}</td>
+                <td>{{r.raw_record.tld}}</td>
+                <td>{{r.raw_record.collectionDate | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+                <td>{{r.raw_record.received_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="is-italic" *ngIf="arr_records.length == 0">No record found!</p>
+
+    <button class="button is-danger is-pulled-left" [ngClass]="{ 'is-loading': is_creating_report }" (click)="cancel_request()">Cancel</button>
+	<button class="button is-primary is-pulled-right" [ngClass]="{ 'is-loading': is_creating_report }" (click)="generate_and_show_temp_report()">Proceed</button>
+
+</section>

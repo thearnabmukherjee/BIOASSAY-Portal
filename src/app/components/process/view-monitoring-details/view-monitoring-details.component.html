@@ -1,0 +1,41 @@
+<div class="card-content" *ngIf="monDetails">
+	<div class="columns is-desktop">
+		<div class="column is-2">Monitoring id</div>
+		<div class="column is-2">{{monDetails.id}}</div>
+		<div class="column is-2">Sample #</div>
+		<div class="column is-2">{{monDetails.sample_no}}</div>
+		<div class="column is-2">Sample Volume</div>
+		<div class="column is-2">
+			<span *ngIf="monDetails.sample_vol">{{monDetails.sample_vol}}</span>
+			<span *ngIf="!monDetails.sample_vol">--NA--</span>
+		</div>
+	</div><br/>
+
+	<div class="columns is-desktop">
+		<div class="column is-2">Sample weight</div>
+		<div class="column is-2">
+			<span *ngIf="monDetails.sample_weight">{{monDetails.sample_weight}}</span>
+			<span *ngIf="!monDetails.sample_weight">--NA--</span>
+		</div>
+		<div class="column is-4">
+			<button class="button is-primary is-light" (click)="show_10H()">View 10H</button>
+		</div>
+	</div><br/>
+
+	<div class="columns is-desktop">
+		<div class="column is-2">Received on</div>
+		<div class="column is-2">{{monDetails.received_on}}</div>
+		<div class="column is-2">Created on</div>
+		<div class="column is-2">{{monDetails.created_on}}</div>
+		<div class="column is-2">Created by</div>
+		<div class="column is-2">{{monDetails.created_by_name}}</div>
+	</div><br/>
+
+	<div class="columns is-desktop">
+		<div class="column is-2">Remarks</div>
+		<div class="column is-10 has-text-justified">
+			<span class="has-text-justified" *ngIf="monDetails.remarks">{{monDetails.remarks}}</span>
+			<span class="has-text-justified" *ngIf="!monDetails.remarks">--NA--</span>
+		</div>
+	</div>
+</div>

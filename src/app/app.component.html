@@ -1,0 +1,190 @@
+<nav class="navbar is-primary has-shadow" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" style="font-size: 23px;">
+            {{title}}
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+
+            <!--    10H form    -->
+
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="has_any_role(['hp', 'normaluser', 'tech'])">
+                <a class="navbar-link" >10H</a>
+                <div class="navbar-dropdown is-left" *ngIf="has_any_role(['hp', 'normaluser', 'tech'])">
+                    <a class="navbar-item" [routerLink]="['list-10h-workers']" *ngIf="has_any_role(['hp'])">New 10H</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: '10 H submitted' }" *ngIf="has_any_role(['hp', 'normaluser', 'tech'])">Submitted</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: '10 H accepted' }" *ngIf="has_any_role(['hp', 'normaluser', 'tech'])">Accepted</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Sample spoiled' }" *ngIf="has_any_role(['normaluser', 'hp', 'tech'])">Sample spoiled</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Being processed' }" *ngIf="has_any_role(['normaluser', 'hp', 'tech'])">Being processed</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Rejected' }" *ngIf="has_any_role(['hp', 'normaluser', 'tech'])">Rejected</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Completed' }" *ngIf="has_any_role(['hp', 'normaluser', 'tech'])">Completed</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Repeat' }" *ngIf="has_any_role(['hp', 'normaluser', 'tech'])">Repeat required</a>
+                </div>
+            </div>
+
+
+            <!--    Registration    -->
+
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="has_any_role(['hp', 'normaluser', 'admin'])">
+                <a class="navbar-link">Registration</a>
+                <div class="navbar-dropdown is-left" *ngIf="has_any_role(['hp', 'normaluser', 'admin'])">
+                    <a class="navbar-item" [routerLink]="['list-10h-workers']" *ngIf="has_any_role(['hp', 'normaluser'])">Registered people</a>
+                    <a class="navbar-item" [routerLink]="['new-worker-registration']" *ngIf="has_any_role(['hp', 'admin'])">New worker registration</a>
+                </div>
+            </div>
+
+
+            <!--    Adminstration    -->
+            
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="has_any_role(['normaluser', 'admin'])">
+                <a class="navbar-link">Administration</a>
+                <div class="navbar-dropdown is-left">
+                    <a class="navbar-item" [routerLink]="['list-users']">Users</a>
+                    <a class="navbar-item" [routerLink]="['list-hp-plant-assignments']">HP - Plant assignments</a>
+                    <a class="navbar-item" [routerLink]="['list-rv-plant-assignments']">Report Viewer - Plant assignments</a>
+                    <a class="navbar-item" [routerLink]="['list-dh-division-assignments']">Divison head - Division assignments</a>
+                    <a class="navbar-item" [routerLink]="['list-divisions']">Divisions</a>
+                    <a class="navbar-item" [routerLink]="['list-plants']">Plants</a>
+                    <a class="navbar-item" [routerLink]="['list-tlds']">TLDs</a>
+                    <a class="navbar-item" [routerLink]="['list-process-type']">Nature of work (Process types)</a>
+                    <a class="navbar-item" [routerLink]="['footnote']">Report footnotes</a>
+                    <a class="navbar-item" [routerLink]="['client-home']">Client home</a>
+                </div>
+            </div>
+
+
+            <!--    Parameters    -->
+
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="has_any_role(['normaluser', 'admin'])">
+                <a class="navbar-link">Parameters</a>
+                <div class="navbar-dropdown is-left">
+                    <a class="navbar-item" [routerLink]="['list-nuclides']">Nuclides</a>
+                    <a class="navbar-item" [routerLink]="['isotope']">Isotopes</a>
+                    <a class="navbar-item" [routerLink]="['list-classes']">Solubility types</a>
+                    <a class="navbar-item" [routerLink]="['list-routes']">Intake routes</a>
+                </div>
+            </div>
+
+
+            <!--    Detection system    -->
+
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="has_any_role(['normaluser', 'admin'])">
+                <a class="navbar-link">Detection system</a>
+                <div class="navbar-dropdown is-left" *ngIf="has_any_role(['normaluser', 'admin'])">
+                    <a class="navbar-item" [routerLink]="['instruments']" *ngIf="has_any_role(['normaluser', 'admin'])">Instruments</a>
+                    <a class="navbar-item" [routerLink]="['detectors']" *ngIf="has_any_role(['normaluser', 'admin'])">Detectors</a>
+                    <a class="navbar-item" [routerLink]="['check-source']" *ngIf="has_any_role(['normaluser', 'admin'])">Standard sources</a>
+                    <a class="navbar-item" [routerLink]="['detector-efficiency']" *ngIf="has_any_role(['normaluser'])">Detector efficiency</a>
+                    <a class="navbar-item" [routerLink]="['backgrounds']" *ngIf="has_any_role(['normaluser'])">Backgrounds</a>
+                </div>
+            </div>
+
+
+            <!--    Reports    -->
+
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="is_logged_in">
+                <a class="navbar-link">Reports</a>
+                <div class="navbar-dropdown is-left">
+                    <a class="navbar-item" [routerLink]="['list-reports']" [queryParams]="{ signed_filter: 'Signed', sent_sign_filter: 'Sent' }">List of approved reports</a>
+
+                    <a class="navbar-item" [routerLink]="['list-reports']" [queryParams]="{ signed_filter: 'Un-signed', sent_sign_filter: 'All' }" 
+                                                                            *ngIf="has_any_role(['normaluser', 'admin', 'oic1', 'oic2'])">List of un-approved reports</a>
+
+
+                    <a class="navbar-item" [routerLink]="['list-reports']" [queryParams]="{ signed_filter: 'All', sent_sign_filter: 'Sent' }" 
+                                                                            *ngIf="has_any_role(['normaluser', 'admin', 'oic1', 'oic2'])">List of sent for approval reports</a>
+
+                    <a class="navbar-item" [routerLink]="['list-reports']" [queryParams]="{ signed_filter: 'All', sent_sign_filter: 'Not sent' }" 
+                                                                            *ngIf="has_any_role(['normaluser', 'admin'])">List of not-sent for approval reports</a>
+
+                    <a class="navbar-item" [routerLink]="['list-reports']" [queryParams]="{ signed_filter: 'All', sent_sign_filter: 'All' }">List of all reports</a>
+                </div>
+            </div>
+
+
+            <!-- <a class="navbar-item" [routerLink]="['list-reports']" *ngIf="is_logged_in">Approved reports</a> -->
+
+
+            <!-- <div class="navbar-item has-dropdown is-hoverable" *ngIf="is_logged_in">
+                <a class="navbar-link">List</a>
+                <div class="navbar-dropdown is-left">
+                    <a class="navbar-item" [routerLink]="['client-home']">Client home</a>
+                    <a class="navbar-item" [routerLink]="['list-divisions']">Divisions</a>
+                    <a class="navbar-item" [routerLink]="['list-plants']">Plants</a>
+                    <a class="navbar-item" [routerLink]="['list-10h-workers']">Registered people</a>
+                    <a class="navbar-item" [routerLink]="['list-users']">User accounts</a>
+
+                    <a class="navbar-item" [routerLink]="['list-hp-plant-assignments']">HP - Plant assignments</a>
+                    <a class="navbar-item" [routerLink]="['list-rv-plant-assignments']">Report Viewer - Plant assignments</a>
+                    <a class="navbar-item" [routerLink]="['list-dh-division-assignments']">Divison head - Division assignments</a>
+
+                    <a class="navbar-item" [routerLink]="['list-tlds']">TLDs</a>
+                    <a class="navbar-item" [routerLink]="['list-nuclides']">Nuclides</a>
+                    <a class="navbar-item" [routerLink]="['list-classes']">Classes</a>
+                    <a class="navbar-item" [routerLink]="['list-routes']">Intake routes</a>
+                    <a class="navbar-item" [routerLink]="['list-process-type']">Process types</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Submitted' }">Submitted</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Accepted' }">Accepted</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Rejected' }">Rejected</a>
+                    <a class="navbar-item" [routerLink]="['list-10h']" [queryParams]="{ type: 'Sample spoiled' }">Sample spoiled</a>
+                    <a class="navbar-item" [routerLink]="['list-mon']">List of monitorings</a>
+                    <a class="navbar-item" [routerLink]="['isotope']">Isotopes</a>
+                    <a class="navbar-item" [routerLink]="['instruments']">Instruments</a>
+                    <a class="navbar-item" [routerLink]="['detectors']">Detectors</a>
+                    <a class="navbar-item" [routerLink]="['check-source']">Check sources</a>
+                    <a class="navbar-item" [routerLink]="['detector-efficiency']">Detector efficiency</a>
+                    <a class="navbar-item" [routerLink]="['backgrounds']">Backgrounds</a>
+                    <a class="navbar-item" [routerLink]="['footnote']">Footnotes</a>
+                    <a class="navbar-item" [routerLink]="['new-worker-registration']">New worker registration</a>
+                    <a class="navbar-item" [routerLink]="['list-reports']">Reports</a>
+                </div>
+            </div> -->
+            
+        </div>
+        
+        
+        <div class="navbar-end">
+            
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="!is_logged_in">
+                <a class="navbar-link">Login</a>
+                <div class="navbar-dropdown is-right">
+                    <a class="navbar-item" [routerLink]="['login-page']">Login</a>
+                    <a class="navbar-item" (click)="goto_signup_page()">Sign up</a>
+                    <a class="navbar-item" (click)="goto_forgot_password_page()">Forgot password</a>
+                </div>
+            </div>
+
+            <div class="navbar-item has-dropdown is-hoverable" *ngIf="is_logged_in">
+                <a class="navbar-link"> 
+                    <span class="icon-text" *ngIf="my_info">
+                        <span class="icon">
+                            <i class="fas fa-user"></i>
+                        </span>
+                        <span>{{my_info.username}}</span>
+                        <span class="icon">
+                            <i class="fas fa-arrow-right"></i>
+                        </span>
+                        {{my_info.first_name}} {{my_info.last_name}}
+                    </span>
+                </a>
+                <div class="navbar-dropdown is-right">
+                    <a class="navbar-item" (click)="logout()">Logout</a>
+                    <a class="navbar-item" (click)="goto_change_password_page()">Change password</a>
+                    <a class="navbar-item" (click)="goto_profile_page()">Profile</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<router-outlet></router-outlet>

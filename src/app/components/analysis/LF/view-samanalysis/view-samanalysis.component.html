@@ -1,0 +1,79 @@
+<div class="card" *ngIf="record">
+    <header class="card-header" [ngClass]="{ 'has-background-success': record.is_BDL, 'has-background-danger': (!record.is_BDL) }">
+        <p class="card-header-title has-text-white">LF SAM analysis details : {{record.name}}</p>
+        <button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_lf_details_opened" (click)="is_lf_details_opened = !is_lf_details_opened">
+            <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+        </button>
+        <button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_lf_details_opened" (click)="is_lf_details_opened = !is_lf_details_opened">
+            <span class="icon">
+                <i class="fas fa-angle-up" aria-hidden="true"></i>
+            </span>
+        </button>
+    </header>
+
+    <div class="card-content" [hidden]="!is_lf_details_opened">
+        <table class="table is-bordered is-fullwidth">
+            <tr>
+                <th>Radionuclide</th>
+                <td>{{nuclide_name}}</td>
+                <th>Detector</th>
+                <td>{{detector_name}}</td>
+                <th>Specific activity</th>
+                <td>{{record.contents.specific_activity}}</td>
+            </tr>
+            <tr>
+                <th>Sample volume</th>
+                <td>{{record.contents.sample_vol}}</td>
+                <th>Analysis volume</th>
+                <td>{{record.contents.analysis_vol}}</td>
+                <th>Total volume</th>
+                <td>{{record.contents.total_vol}}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{record.name}}</td>
+                <th>Sample collecton duration</th>
+                <td>{{record.contents.sample_collection_duration}}</td>
+                <th>Recovery %</th>
+                <td>{{record.contents.recovery_percent}}</td>
+            </tr>
+            <tr>
+                <th>Current activity</th>
+                <td>{{record.activity}} ± {{record.activity_error}}</td>
+                <th>Previous activity</th>
+                <td>{{record.contents.previous_activity}} ± {{record.contents.previous_activity_error}}</td>
+                <th>Analysis date</th>
+                <td>{{record.analysis_date | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+            </tr>
+
+
+            <!--    Show readings    -->
+
+            <tr *ngFor="let r of arrReadings">
+                <th>X (value)</th>
+                <td>{{r.x}}</td>
+                <th>±</th>
+                <th>Y (SD)</th>
+                <td colspan="2">{{r.y}}</td>
+            </tr>
+
+            <tr>
+                <th>Is BDL?</th>
+                <td>
+                    <div *ngIf="record.is_BDL">Yes</div>
+				    <div *ngIf="!record.is_BDL">No</div>
+                </td>
+                <th>Created on</th>
+                <td>{{record.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+                <th>Created by</th>
+                <td>{{record.created_by_name}}</td>
+            </tr>
+            <tr>
+                <th>Comments</th>
+                <td colspan="5" class="has-text-justified">{{record.comments}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

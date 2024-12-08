@@ -1,0 +1,48 @@
+<section class="section">
+    <div class="title is-2">
+        List of solubility types
+    </div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="has-text-right">
+        <button class="button is-warning" (click)="ask_for_new_class()">Add New</button>
+    </div>
+    
+    <p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+    
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+    
+                <tr class="has-background-primary ">
+                    <td class="has-text-white is-size-4"> Id</td>
+                    <td class="has-text-white is-size-4"> Name </td>
+    
+                </tr>
+                
+                <tr *ngFor="let d of arrRecords">
+                    <td>{{d.id}}</td>
+                    <td>{{d.name}}</td>
+                </tr>
+        </table>
+        <p class="is-italic" *ngIf="arrRecords.length == 0 && !is_loading">No solubility type found!</p>
+    </div>
+</section>
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			
+            <p class="title">New solubility type name</p>
+            <input class="input is-medium is-primary" type="text" name="class" [(ngModel)]="new_name" placeholder="Solubility type name...." maxlength="50">
+
+			<button class="button is-danger is-pulled-left" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" (click)="create_class()">Create</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>

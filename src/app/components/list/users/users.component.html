@@ -1,0 +1,68 @@
+<section class="section" [ngClass]="{ 'is-clipped': is_open_modal }">
+	<div class="title is-2">
+		List of User accounts
+	</div>
+	<progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+	<p *ngIf="is_loading">Loading. Please wait.....</p>
+
+	<p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+	<div class="table-container" >
+		<table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+			<thead>
+				<tr class="has-background-primary">
+					<td class="has-text-white is-size-4">Id</td>
+					<td class="has-text-white is-size-4">Username</td>
+					<td class="has-text-white is-size-4">First name</td>
+					<td class="has-text-white is-size-4">Last name</td>
+					<td class="has-text-white is-size-4">Email</td>
+					<td class="has-text-white is-size-4">Roles assigned</td>
+					<td class="has-text-white is-size-4"></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let r of arrRecords">
+					<td>{{r.id}}</td>
+					<td>{{r.username}}</td>
+					<td>{{r.first_name}}</td>
+					<td>{{r.last_name}}</td>
+					<td>{{r.email}}</td>
+					<td>
+						{{format_roles(r.roles)}}
+					</td>
+					<td>
+						<button class="button is-danger is-light" (click)="ask_for_role_change(r.id, r.roles)">Change role</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<p class="subtitle">Please select role to apply to the user</p>
+			<div class="field" *ngFor="let obj of arrAllRoles">
+				<input class="is-checkradio" [attr.id]="obj.name" type="checkbox" [attr.name]="obj.name" [checked]="obj.is_checked" (change)="role_checked_unchecked(obj, $event)">
+				<label [attr.for]="obj.name">{{obj.label}}</label>
+			</div>
+
+			<div class="has-text-danger is-size-4 has-text-justified is-underlined">
+				NOTE: Remember to manually change corresponding role on IDS portal also. 
+				User can perform an action if and only if a user is assigned sufficient permissions in both IDS and Bioassay portals
+				eg: If a person is HP in Bioassay, then he/she should have corresponding role assigned on IDS portal also.
+			</div>
+
+			<div class="buttons is-pulled-right">
+				<button class="button is-primary" (click)="change_role()">Change role</button>
+				<button class="button is-danger" (click)="close_modal()">Close</button>
+			</div>
+
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>

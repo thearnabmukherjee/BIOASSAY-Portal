@@ -1,0 +1,43 @@
+<section class="section">
+    <div class="title is-2">
+        List of Instruments
+    </div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="has-text-right">
+        <button class="button is-warning" [ngClass]="{ 'is-loading': is_creating }" (click)="create_new_instrument()">Add New</button>
+    </div>
+    
+    <p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+    
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+    
+                <tr class="has-background-primary ">
+                    <td class="has-text-white is-size-4"> Id</td>
+                    <td class="has-text-white is-size-4"> Name </td>
+					<td class="has-text-white is-size-4"> Is enabled? </td>
+                    <td class="has-text-white is-size-4"> Created on </td>
+                    <td class="has-text-white is-size-4"> Created by </td>
+                </tr>
+                
+                <tr *ngFor="let d of arrRecords">
+                    <td>{{d.id}}</td>
+                    <td>{{d.name}}</td>
+					<td>
+                        <span *ngIf="d.is_active">Yes</span>
+                        <span *ngIf="!d.is_active">No</span>
+
+                        &nbsp;
+                        <button class="button is-danger is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="d.is_active" (click)="enable_disable_instrument(d.id, false)">De-activate</button>
+                        <button class="button is-primary is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="!d.is_active" (click)="enable_disable_instrument(d.id, true)">Activate</button>
+                    </td>
+                    <td>{{d.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+                    <td>{{d.created_by_name}}</td>
+                </tr>
+        </table>
+        <p class="is-italic" *ngIf="arrRecords.length == 0 && !is_loading">No instrument found!</p>
+    </div>
+</section>

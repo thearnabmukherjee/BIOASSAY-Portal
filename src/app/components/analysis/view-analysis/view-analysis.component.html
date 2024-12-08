@@ -1,0 +1,527 @@
+<section class="ml-2 mt-2">
+
+	<!--	Personal details	-->
+
+	<div class="card" *ngIf="person_id > 0">
+		<header class="card-header has-background-primary">
+			<p class="card-header-title has-text-white">Personal details</p>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-down" aria-hidden="true"></i>
+				</span>
+			</button>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-up" aria-hidden="true"></i>
+				</span>
+			</button>
+		</header>
+	
+		<sub-worker-details [hidden]="!is_personal_details_opened" 
+							[person-id]="person_id" 
+							(close)="failed_to_load_worker_details($event)"></sub-worker-details>
+	</div>
+
+
+	<!--	Monitoring details	-->
+
+	<div class="card" *ngIf="mon_id > 0">
+		<header class="card-header has-background-link">
+			<p class="card-header-title has-text-white">Monitoring details</p>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-down" aria-hidden="true"></i>
+				</span>
+			</button>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-up" aria-hidden="true"></i>
+				</span>
+			</button>
+		</header>
+
+		
+		<app-view-monitoring-details [hidden]="!is_monitoring_details_opened" [monitoring-record]="monRecord"></app-view-monitoring-details>
+	</div><br/><br/>
+
+
+	<div class="title is-2">
+        List of Analysis
+    </div>
+
+	<progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="has-text-right" *ngIf="h10Record != null">
+		<div class="field is-grouped">
+			<p class="control">
+				<button class="button is-primary" (click)="create_new_analysis()" [attr.disabled]="(h10Record.status == '10 H accepted' || h10Record.status == 'Being processed') ? null : true">
+					<span class="icon is-small">
+						<i class="fas fa-solid fa-flask"></i>
+					</span>&nbsp;&nbsp;
+					New analysis
+				</button>
+			</p>
+			
+			
+			<p class="control" *ngIf="!is_selecting_records">
+				<button class="button is-link" (click)="start_selecting_for_bunch()" [attr.disabled]="(h10Record.status == '10 H accepted' || h10Record.status == 'Being processed') ? null : true">
+					<span class="icon is-small">
+						<i class="fas fa-solid fa-link"></i>
+					</span>&nbsp;&nbsp;
+					Combine activity
+				</button>
+			</p>
+
+			<p class="control" *ngIf="is_selecting_records">
+				<button class="button is-link" (click)="open_save_bunch_modal()" [attr.disabled]="(h10Record.status == '10 H accepted' || h10Record.status == 'Being processed') ? null : true">
+					<span class="icon is-small">
+						<i class="fas fa-save"></i>
+					</span>&nbsp;&nbsp;
+					Save combined activity
+				</button>
+			</p>
+
+			<p class="control" *ngIf="is_selecting_records">
+				<button class="button is-danger" (click)="cancel_selecting_records()" [attr.disabled]="(h10Record.status == '10 H accepted' || h10Record.status == 'Being processed') ? null : true">
+					<span class="icon is-small">
+						<i class="fas fa-ban"></i>
+					</span>&nbsp;&nbsp;
+					Cancel
+				</button>
+			</p>
+
+			<p class="control">
+				<button class="button is-light" (click)="open_repeat_monitoring_modal()" [attr.disabled]="(h10Record.status == '10 H accepted' || h10Record.status == 'Being processed') ? null : true">
+					<span class="icon is-small">
+						<i class="fas fa-redo"></i>
+					</span>&nbsp;&nbsp;
+					Ask for repeat monitoring
+				</button>
+			</p>
+
+		</div>
+        
+		<div class="field is-grouped">
+			<p class="control" *ngIf="!is_selecting_for_sets">
+				<button class="button is-link" (click)="start_selecting_for_set()" [attr.disabled]="(h10Record.status == '10 H accepted' || h10Record.status == 'Being processed') ? null : true">
+					<span class="icon is-small">
+						<i class="fas fa-layer-group"></i>
+					</span>&nbsp;&nbsp;
+					Combine radionuclides
+				</button>
+			</p>
+
+			<p class="control" *ngIf="is_selecting_for_sets">
+				<button class="button is-link" (click)="open_create_set_modal()" [attr.disabled]="(h10Record.status == '10 H accepted' || h10Record.status == 'Being processed') ? null : true">
+					<span class="icon is-small">
+						<i class="fas fa-save"></i>
+					</span>&nbsp;&nbsp;
+					Save combined radionuclides
+				</button>
+			</p>
+
+			<p class="control" *ngIf="is_selecting_for_sets">
+				<button class="button is-danger" (click)="cancel_selecting_records()" [attr.disabled]="(h10Record.status == '10 H accepted' || h10Record.status == 'Being processed') ? null : true">
+					<span class="icon is-small">
+						<i class="fas fa-ban"></i>
+					</span>&nbsp;&nbsp;
+					Cancel
+				</button>
+			</p>
+		</div>
+    </div>
+    
+
+	<!--	Sets	-->
+
+	<p class="has-text-right" *ngIf="!is_loading">{{arrSetRecords.length}} record(s) found!</p>
+	<p class="subtitle">Combined radionuclides</p>
+	<div class="table-container">
+		<table class="table is-fullwidth is-striped is-hoverable" *ngIf="arrSetRecords.length > 0 && !is_loading">
+			<thead>
+				<tr class="has-background-primary">
+					<th class="has-text-white is-size-4">Id</th>
+					<th class="has-text-white is-size-4">Name</th>
+					<th class="has-text-white is-size-4">Calculations</th>
+					<th class="has-text-white is-size-4">Is enabled?</th>
+					<th class="has-text-white is-size-4">Comments</th>
+					<th class="has-text-white is-size-4">Created on</th>
+					<th class="has-text-white is-size-4">Created by</th>
+					<th class="has-text-white is-size-4">View</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let r of arrSetRecords">
+					<td>{{r.id}}</td>
+					<td>{{r.name}}</td>
+					<td>{{format_calculations(r.arrCalculations)}}</td>
+					<td>
+						<span *ngIf="r.is_active">Yes</span>
+                        <span *ngIf="!r.is_active">No</span>
+
+                        &nbsp;
+                        <button class="button is-danger is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="r.is_active" (click)="enable_disable_record(r.id, false)">De-activate</button>
+                        <button class="button is-primary is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="!r.is_active" (click)="enable_disable_record(r.id, true)">Activate</button>
+					</td>
+					<td class="has-text-justified">{{r.comments}}</td>
+					<td>{{r.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+					<td>{{r.created_by_name}}</td>
+					<td><button class="button is-primary is-small" (click)="view_set_details(r.id)">View</button></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p class="is-italic" *ngIf="arrSetRecords.length == 0 && !is_loading">No set record found!</p>
+	</div>
+
+
+
+
+	<!--	Non-bunched calculations	-->
+
+	<p class="subtitle">Individual analysis</p>
+	<p class="has-text-right" *ngIf="!is_loading">{{arrNonBunchedRecords.length}} record(s) found!</p>
+
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrNonBunchedRecords.length > 0 && !is_loading" >
+			<thead>
+				<tr class="has-background-primary ">
+					<td class="has-text-white is-size-4" *ngIf="is_selecting_records || is_selecting_for_sets"> Select</td>
+                    <td class="has-text-white is-size-4"> Id</td>
+					<td class="has-text-white is-size-4"> Nuclide </td>
+					<td class="has-text-white is-size-4"> Isotope </td>
+					<td class="has-text-white is-size-4"> Activity </td>
+					<td class="has-text-white is-size-4"> Recovery % </td>
+					<td class="has-text-white is-size-4"> Technique </td>
+					<!-- <td class="has-text-white is-size-4"> Detector </td> -->
+                    <td class="has-text-white is-size-4"> Name </td>
+					<!-- <td class="has-text-white is-size-4"> Tracer </td> -->
+					<th class="has-text-white is-size-4">BDL</th>
+					<!-- <td class="has-text-white is-size-4"> Analysed on </td> -->
+					<td class="has-text-white is-size-4"> Comments </td>
+					<td class="has-text-white is-size-4"> Created on </td>
+					<td class="has-text-white is-size-4"> Created by </td>
+					<td class="has-text-white is-size-4"> Contents </td>
+                </tr>
+			</thead>
+            <tbody>
+				<tr *ngFor="let r of arrNonBunchedRecords">
+					<td *ngIf="is_selecting_records || is_selecting_for_sets">
+						<div class="field">
+							<input class="is-checkradio is-block is-success" [(ngModel)]="r.is_checked" type="checkbox" [attr.id]="r.ui_name" [attr.name]="r.ui_name">
+							<label [attr.for]="r.ui_name"></label>
+						</div>
+					</td>
+					<td>{{r.id}}</td>
+					<td>{{r.nuclide_name}}</td>
+					<td>{{r.isotope_name}}</td>
+					<td>{{r.activity}} ± {{r.activity_error}}</td>
+					<td>{{r.contents.recovery_percent}}</td>
+					<td>{{r.technique}}</td>
+					<!-- <td>
+						{{r.detector_name}}
+						<span class="is-italic has-text-dark is-size-7">({{r.instrument_name}})</span>
+					</td> -->
+					<td>{{r.name}}</td>
+					<!-- <td>{{r.tracer_name}}</td> -->
+					<td>
+						<span *ngIf="r.is_BDL">Yes</span>
+						<span *ngIf="!r.is_BDL">No</span>
+					</td>
+					<!-- <td>{{r.analysis_date | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td> -->
+					<td class="comments">{{r.comments}}</td>
+					<td>{{r.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+					<td>{{r.created_by_name}}</td>
+					<td><button class="button is-primary is-small" (click)="view_calculation_details(r.id)">View</button></td>
+				</tr>
+			</tbody>
+        </table>
+        <p class="is-italic" *ngIf="arrNonBunchedRecords.length == 0 && !is_loading">No individual analysis record found!</p>
+    </div>
+
+	<hr/>
+
+
+
+
+	<!--	Bunched calculations	-->
+
+	<p class="subtitle">Combined activity records</p>
+	<p class="has-text-right" *ngIf="!is_loading">{{arrFormattedBunchedRecords.length}} record(s) found!</p>
+
+	<div class="table-container">
+		<table class="table is-fullwidth is-striped is-hoverable" *ngIf="arrBunchedRecords.length > 0 && !is_loading">
+			<thead>
+				<tr class="has-background-primary">
+					<th class="has-text-white is-size-4" *ngIf="is_selecting_records || is_selecting_for_sets">Select</th>
+					<th class="has-text-white is-size-4">Id</th>
+					<th class="has-text-white is-size-4">Name</th>
+					<th class="has-text-white is-size-4">Nuclide/Isotopes</th>
+					<th class="has-text-white is-size-4">Activity</th>
+					<th class="has-text-white is-size-4">Comments</th>
+					<th class="has-text-white is-size-4">BDL</th>
+					<th class="has-text-white is-size-4">Created on</th>
+					<th class="has-text-white is-size-4">Created by</th>
+				</tr>
+			</thead>
+			<tbody>
+				<ng-container *ngFor="let r of arrFormattedBunchedRecords; let i = index">
+					<tr>
+						<td *ngIf="is_selecting_records || is_selecting_for_sets">
+							<div class="field">
+								<input class="is-checkradio is-block is-success" [(ngModel)]="r.parent.is_checked" type="checkbox" [attr.id]="r.parent.ui_name" [attr.name]="r.parent.ui_name">
+								<label [attr.for]="r.parent.ui_name"></label>
+							</div>
+						</td>
+						<td>
+							<button class="button" (click)="r.is_expanded = !r.is_expanded">
+								<span class="icon has-text-primary">
+									<i class="fas fa-plus-circle" *ngIf="!r.is_expanded"></i>
+									<i class="fas fa-minus-circle" *ngIf="r.is_expanded"></i>
+								</span>
+							</button>
+							{{r.parent.id}}
+						</td>
+						<td>{{r.parent.name}}</td>
+						<td>{{_get_nuclide_isotopes(r.children)}}</td>
+						<td>{{r.parent.activity}} ± {{r.parent.activity_error}}</td>
+						<td class="comments">{{r.parent.comments}}</td>
+						<td>
+							<span *ngIf="r.parent.is_BDL">Yes</span>
+							<span *ngIf="!r.parent.is_BDL">No</span>
+						</td>
+						<td>{{r.parent.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+						<td>{{r.parent.created_by_name}}</td>
+					</tr>
+
+					<tr *ngIf="r.is_expanded">
+						<td [attr.colspan]="(is_selecting_records || is_selecting_for_sets) ? 8 : 7">
+							<div class="table-container">
+								<table class="table is-fullwidth is-striped is-hoverable is-borderless" *ngIf="arrBunchedRecords.length > 0 && !is_loading">
+									<thead>
+										<tr class="has-background-link">
+											<th class="has-text-white is-size-6"> Id</th>
+											<th class="has-text-white is-size-6"> Nuclide </th>
+											<th class="has-text-white is-size-6"> Isotope </th>
+											<th class="has-text-white is-size-6"> Activity </th>
+											<th class="has-text-white is-size-6"> Technique </th>
+											<!-- <th class="has-text-white is-size-6"> Detector </th> -->
+											<th class="has-text-white is-size-6"> Name </th>
+											<!-- <th class="has-text-white is-size-6"> Tracer </th> -->
+											<!-- <th class="has-text-white is-size-6"> Analysed on </th> -->
+											<th class="has-text-white is-size-6"> Comments </th>
+											<th class="has-text-white is-size-6"> BDL</th>
+											<th class="has-text-white is-size-6"> Created on </th>
+											<th class="has-text-white is-size-6"> Created by </th>
+											<th class="has-text-white is-size-6"> Contents </th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr *ngFor="let c of r.children">
+											<td>{{c.id}}</td>
+											<td>{{c.nuclide_name}}</td>
+											<td>
+												<span *ngIf="c.isotope_id && c.isotope_id > 0">{{c.isotope_name}}</span>
+											</td>
+											<td>{{c.activity}} ± {{c.activity_error}}</td>
+											<td>{{c.technique}}</td>
+											<!-- <td>
+												<span *ngIf="c.detector_id && c.detector_id > 0">{{c.detector_name}}</span>
+											</td> -->
+											<td>{{c.name}}</td>
+											<!-- <td>
+												<span *ngIf="c.tracer_id && c.tracer_id > 0">{{c.tracer_name}}</span>
+											</td> -->
+											<!-- <td>{{c.analysis_date | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td> -->
+											<td class="comments">{{c.comments}}</td>
+											<td>
+												<span *ngIf="c.is_BDL">Yes</span>
+												<span *ngIf="!c.is_BDL">No</span>
+											</td>
+											<td>{{c.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+											<td>{{c.created_by_name}}</td>
+											<td><button class="button is-primary is-small" (click)="view_calculation_details(c.id)">View</button></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</ng-container>
+			</tbody>
+		</table>
+
+		<p class="is-italic" *ngIf="arrBunchedRecords.length == 0 && !is_loading">No bunched calculation record found!</p>
+	</div>
+
+	<hr/>
+
+	
+</section>
+
+
+<!--	New analysis modal	-->
+
+<div class="modal" *ngIf="is_open_create_analysis_modal" [ngClass]="{ 'is-active': is_open_create_analysis_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<app-create-analysis [mon-id]="mon_id" (closed)="close_new_analysis_modal($event)"></app-create-analysis>
+	</div>
+</div>
+
+
+
+<!--	New bunch modal	-->
+
+<div class="modal" *ngIf="is_open_save_bunch_modal" [ngClass]="{ 'is-active': is_open_save_bunch_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<p class="title">Create new bunch</p>
+
+			<!--	Name	-->
+
+			<div class="columns">
+                <div class="column is-4">Name</div>
+                <div class="column is-8">
+                    <input class="input is-primary is-fullwidth" type="text" placeholder="New bunch name" [(ngModel)]="name" maxlength="512" />
+                </div>
+            </div><br/>
+
+
+			<!--	BDL	? -->
+
+			<div class="columns">
+                <div class="column is-4">BDL</div>
+                <div class="column is-8">
+					<div class="field">
+						<input class="is-checkradio is-block is-success" [(ngModel)]="is_BDL" type="checkbox" id="dkjfhssdfsdfdkj" name="dkjfhssdfsdfdkj">
+						<label for="dkjfhssdfsdfdkj">Make it BDL</label>
+					</div>
+                </div>
+            </div><br/>
+
+
+			<!--    Comments    -->
+
+			<div class="columns">
+				<div class="column is-4">Comments</div>
+				<div class="column is-8">
+                    <textarea class="textarea is-primary is-fullwidth" placeholder="Comments if any..." [(ngModel)]="comments" maxlength="512"></textarea>
+                </div>
+			</div>
+
+
+			<button class="button is-danger is-pulled-left" [ngClass]="{ 'is-loading': is_creating_bunch }" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" [ngClass]="{ 'is-loading': is_creating_bunch }" (click)="submit_new_bunch_record()">Create</button>
+			<br/>
+			<br/>
+
+		</div>
+	</div>
+</div>
+
+
+
+<!--	New set modal	-->
+
+<div class="modal" *ngIf="is_open_set_modal" [ngClass]="{ 'is-active': is_open_set_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<p class="title">Create new set</p>
+
+			<!--	Name	-->
+
+			<div class="columns">
+                <div class="column is-4">Name</div>
+                <div class="column is-8">
+                    <input class="input is-primary is-fullwidth" type="text" placeholder="New set name" [(ngModel)]="name" maxlength="200" />
+                </div>
+            </div><br/>
+
+
+			<!--    Comments    -->
+
+			<div class="columns">
+				<div class="column is-4">Comments</div>
+				<div class="column is-8">
+                    <textarea class="textarea is-primary is-fullwidth" placeholder="Comments if any..." [(ngModel)]="comments" maxlength="2000"></textarea>
+                </div>
+			</div>
+
+
+			<button class="button is-danger is-pulled-left" [ngClass]="{ 'is-loading': is_creating_bunch }" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" [ngClass]="{ 'is-loading': is_creating_bunch }" (click)="submit_new_set_record()">Create</button>
+			<br/>
+			<br/>
+
+		</div>
+	</div>
+</div>
+
+
+
+<!--	String input modal	-->
+
+<div class="modal" *ngIf="is_open_reason_modal" [ngClass]="{ 'is-active': is_open_reason_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content box">
+		<p class="subtitle">Please specify the reason for repeat monitoring</p>
+		<input class="input is-focused is-fullwidth is-primary" type="text" placeholder="Reason for repeat monitoring" maxlength="512" [(ngModel)]="reason">
+		<br/>
+
+		<p class="subtitle">Sample collection duration</p>
+		<input class="input is-focused is-fullwidth is-primary" type="text" placeholder="Duration comments" maxlength="512" [(ngModel)]="duration_comments">
+		<br/>
+		<br/>
+		
+		<button class="button is-danger is-pulled-left" [ngClass]="{ 'is-loading': is_creating_bunch }" (click)="close_modal()">Cancel</button>
+		<button class="button is-primary is-pulled-right" [ngClass]="{ 'is-loading': is_creating_bunch }" (click)="ask_for_repeat_monitoring()">Submit</button>
+		<br/>
+		<br/>
+	</div>
+</div>
+
+
+<!--	View set details	-->
+
+<div class="modal" *ngIf="is_open_set_details_modal" [ngClass]="{ 'is-active': is_open_set_details_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<ng-container *ngFor="let r of arr_calc_for_set_details; let i = index">
+				<app-view-alpha-analysis *ngIf="r.technique == 'ALPHA SPECTROMETRY'" [record]="r"></app-view-alpha-analysis>
+				<app-view-lfanalysis *ngIf="(r.technique == 'LF SAM') || (r.technique == 'LF CFM')" [record]="r"></app-view-lfanalysis>
+				<br/>
+			</ng-container>
+			<br/>
+			<br/>
+			<button class="button is-danger is-pulled-left" (click)="close_modal()">Close</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+</div>
+
+
+
+<!--	View calculation details	-->
+
+<div class="modal" *ngIf="is_open_calculation_details" [ngClass]="{ 'is-active': is_open_calculation_details }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+
+			<app-view-lfanalysis [record]="selected_calculation" *ngIf="(selected_calculation!.technique == 'LF SAM') || (selected_calculation!.technique == 'LF CFM')"></app-view-lfanalysis>
+			<app-view-alpha-analysis [record]="selected_calculation" *ngIf="selected_calculation!.technique == 'ALPHA SPECTROMETRY'"></app-view-alpha-analysis>
+
+			<br/>
+			<br/>
+			<button class="button is-danger is-pulled-left" (click)="close_modal()">Close</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+</div>

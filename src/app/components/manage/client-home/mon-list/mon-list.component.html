@@ -1,0 +1,49 @@
+<section>
+    <p *ngIf="is_loading">Loading...</p>
+    <div class="table-container" *ngIf="arrRecords.length > 0">
+		<table class="table is-fullwidth is-striped is-bordered is-hoverable ">
+            <thead>
+                <tr class="has-background-primary">
+                    <th class="has-text-white">Id</th>
+                    <th class="has-text-white">Sample #</th>
+                    <th class="has-text-white">Sample wt/vol</th>
+                    <th class="has-text-white">Division/Plant</th>
+                    <th class="has-text-white">Received on</th>
+                    <th class="has-text-white">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let m of arrRecords">
+                    <td>{{m.id}}</td>
+                    <td>{{m.sample_no}}</td>
+                    <td>{{show_wt_vol_values(m.sample_vol, m.sample_weight)}}</td>
+                    <td>{{get_div_plant(m)}}</td>
+                    <td>{{m.received_on}}</td>
+                    <td>
+                        <p class="buttons">
+                            
+                            <button class="button has-text-primary has-tooltip-arrow" data-tooltip="View 10H" (click)="show_linked_10H(m)">
+                                <span class="icon is-small">
+                                    <i class="fab fa-wpforms"></i>
+                                </span>
+                            </button>
+
+                            <button class="button has-text-link has-tooltip-arrow" data-tooltip="View analysis" (click)="show_linked_analysis(m)">
+                                <span class="icon is-small">
+                                    <i class="fas fa-flask"></i>
+                                </span>
+                            </button>
+
+                            <button class="button has-text-danger has-tooltip-arrow" [attr.disabled]="(m.report_id > 0) ? null : true" data-tooltip="View report" (click)="show_report(m.report_id)">
+                                <span class="icon is-small">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </button>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p *ngIf="arrRecords.length == 0 && !is_loading">No monitorings found!</p>
+</section>

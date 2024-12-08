@@ -1,0 +1,441 @@
+
+<p class="title"> Edit 10H form</p>
+
+<div class="card" *ngIf="person_id > 0">
+	<header class="card-header has-background-primary">
+		<p class="card-header-title has-text-white">Personal details</p>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-down" aria-hidden="true"></i>
+			</span>
+		</button>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-up" aria-hidden="true"></i>
+			</span>
+		</button>
+	</header>
+
+	<sub-worker-details [hidden]="!is_personal_details_opened" 
+						[person-id]="person_id" 
+						(close)="failed_to_load_worker_details($event)"></sub-worker-details>
+</div>
+
+<div class="card" *ngIf="h10_res">
+	<header class="card-header has-background-link">
+		<p class="card-header-title has-text-white">Monitoring details</p>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-down" aria-hidden="true"></i>
+			</span>
+		</button>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-up" aria-hidden="true"></i>
+			</span>
+		</button>
+	</header>
+	<div class="card-content" [hidden]="!is_monitoring_details_opened">
+		
+
+		<!--	Division, Plant and HP	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Division<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-3">
+				<div class="select is-primary is-fullwidth">
+					<select [(ngModel)]="selected_division_id" name="ddlDivision">
+						<option value="-1" selected>--Select--</option>
+						<option [value]="d.id" *ngFor="let d of arrDivisions">{{d.abbr}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Plant<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-3">
+				<div class="select is-primary is-fullwidth">
+					<select [(ngModel)]="selected_plant_id" name="ddlPlant" (change)="plant_selection_changed($event)">
+						<option value="-1" selected>--Select--</option>
+						<option [value]="p.id" *ngFor="let p of arrPlants">{{p.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">HP</p>
+			</div>
+			<div class="column is-3">
+				<span>{{hp_name}}</span>
+			</div>
+		</div><br/>
+
+
+		<!--	Worker type, TLD and CC	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Worker type<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-3">
+				<div class="select is-primary is-fullwidth">
+					<select [(ngModel)]="selected_worker_type" name="ddlWT">
+						<option value="" selected>--Select--</option>
+						<option [value]="w" *ngFor="let w of arrWorkerType">{{w}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">TLD no</p>
+			</div>
+			<div class="column is-3">
+				<div class="columns">
+					<div class="column">
+						<div class="select is-primary is-fullwidth" [ngClass]="{ 'is-loading': is_changing_plant }">
+							<select [(ngModel)]="selected_tld_fragment" name="ddlTLD">
+								<option value="" selected>--Select--</option>
+								<option [value]="t.tld" *ngFor="let t of arrTLDFragments">{{t.tld}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="column">
+						<span>C</span>
+					</div>
+					<div class="column">
+						<input class="input is-primary " type="text" placeholder="TLD no." maxlength="5" [(ngModel)]="selected_tld_fragment_last">
+					</div>
+				</div>
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Comp. Code</p>
+			</div>
+			<div class="column is-3">
+				<div class="columns">
+					<div class="column">
+						<div class="select is-primary is-fullwidth">
+							<select [(ngModel)]="selected_CC_fragment" name="ddlCC">
+								<option value="" selected>--Select--</option>
+								<option [value]="c" *ngFor="let c of arrCCFragments">{{c}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="column">
+						<input class="input is-primary " type="text" placeholder="CC no." maxlength="4" [(ngModel)]="selected_CC_fragment_middle">
+					</div>
+					<div class="column">
+						<input class="input is-primary " type="text" placeholder="CC no." maxlength="4" [(ngModel)]="selected_CC_fragment_last">
+					</div>
+				</div>
+			</div>
+		</div><br/>
+
+
+		<!--	Sample type, duration of collection and date of collection	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Sample type<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-3">
+				
+				<div class="columns">
+					<div class="column">
+						<div class="select is-primary is-fullwidth">
+							<select [(ngModel)]="selected_Sample_Type_Fragment" name="ddlST">
+								<option value="" selected>--Select--</option>
+								<option [value]="s" *ngFor="let s of arrSampleType">{{s}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="column">
+						<input class="input is-primary " type="text" [attr.placeholder]="selected_Sample_Type_Fragment == 'Other' ? 'Now required' : ''" maxlength="30" [(ngModel)]="selected_Sample_Type_Fragment_Last">
+					</div>
+				</div>
+
+				
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Duration of collection<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-3">
+				
+				<div class="columns">
+					<div class="column">
+						<div class="select is-primary is-fullwidth">
+							<select [(ngModel)]="selected_collection_duration_fragment" name="ddlCD">
+								<option value="" selected>--Select--</option>
+								<option [value]="s" *ngFor="let s of arrCollectionDuration">{{s}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="column">
+						<input class="input is-primary " type="text" [attr.placeholder]="selected_collection_duration_fragment == 'Others' ? 'Now required' : ''" maxlength="30" [(ngModel)]="selected_collection_duration_fragment_last">
+					</div>
+				</div>
+
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Date of collection<span class="mandatory">*</span></p>
+			</div>
+			<div class="column field is-3">
+				<div class="control has-icons-left">
+					<input class="input is-medium" id="dtCollection" type="date" placeholder="Date of collection" [(ngModel)]="selected_date_of_collection">
+				</div>
+			</div>
+		</div><br/>
+
+		
+		<!--	Type of monitoring and Nature of type of proccess or operation	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Type of monitoring<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-3">
+				<div class="select is-primary is-fullwidth">
+					<select [(ngModel)]="selected_monitoring_type" name="ddlTM">
+						<option value="" selected>--Select--</option>
+						<option [value]="s" *ngFor="let s of arrMonitoringType">{{s}}</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Nature and type of process and operation<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-3">
+				<div class="select is-primary is-fullwidth">
+					<select [(ngModel)]="selected_process_type" name="ddlPT">
+						<option value="" selected>--Select--</option>
+						<option [value]="s.desc" *ngFor="let s of arrProcessTypes">{{s.desc}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="column is-3">
+				<input class="input is-primary " type="text" placeholder="If other, please specify" maxlength="512" [(ngModel)]="selected_process_type_other">
+			</div>
+		</div><br/>
+
+
+		<!--	Probable time of exposure	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-3">
+				<p class="has-text-weight-bold">Probable date, duration and time of exposure<span class="mandatory" *ngIf="selected_monitoring_type == arrMonitoringType[1]">*</span></p>
+			</div>
+			<div class="column is-3 field">
+				<div class="control has-icons-left">
+					<input class="input is-medium" type="date" id="dtExposureTime" placeholder="Click to open calender" [(ngModel)]="selected_time_of_exposure">
+				</div>
+			</div>
+			<div class="column is-6">
+				<input class="input is-primary " type="text" placeholder="Provide details such as suspected radionuclides, incidence etc." maxlength="512" [(ngModel)]="selected_time_of_exposure_other">
+			</div>
+		</div><br/>
+
+		
+		
+		<!--	Brief relavant description	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-3">
+				<p class="has-text-weight-bold">Brief relevant description of incidence<span class="mandatory" *ngIf="(selected_monitoring_type == arrMonitoringType[1]) || (selected_monitoring_type == arrMonitoringType[2])">*</span></p>
+			</div>
+			<div class="column is-9">
+				<textarea class="textarea is-primary" placeholder="Please specify brief relevant description of incidence. It is mandatory for Task-related and Special monitoring types" [(ngModel)]="selected_brief_description"></textarea>
+			</div>
+		</div><br/>
+
+
+		<!--	Intake routes	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-3">
+				<p class="has-text-weight-bold">Route of intake<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-9">
+				<div class="table-container" *ngIf="arrIntakeRoutes.length > 0">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td style="min-width: 150px;" *ngFor="let r of arrIntakeRoutes" class="field">
+									<input class="is-checkradio" [attr.id]="r.ui_name" type="checkbox" [attr.name]="r.ui_name" [checked]="r.is_checked" (change)="intake_route_checked_unchecked(r, $event)">
+									<label [attr.for]="r.ui_name">{{r.name}}</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p *ngIf="arrIntakeRoutes.length == 0">No intake route found!</p>
+			</div>
+		</div><br/>
+
+
+
+		<!--	Radionuclides	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-3">
+				<p class="has-text-weight-bold">Possible radioactive contaminants<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-9">
+				<div class="table-container" *ngIf="arrNuclides.length > 0">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td style="min-width: 150px;" *ngFor="let r of arrNuclides" class="field">
+									<input class="is-checkradio" [attr.id]="r.ui_name" type="checkbox" [attr.name]="r.ui_name" [checked]="r.is_checked" (change)="nuclide_checked_unchecked(r, $event)">
+									<label [attr.for]="r.ui_name">{{r.name}}</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p *ngIf="arrNuclides.length == 0">No radionuclide found!</p>
+			</div>
+		</div>
+		<article class="message is-primary">
+			<div class="message-body">
+				If nuclide is not present in the list, please mention it in the comments.
+			</div>
+		</article>
+		<br/>
+
+
+		<!--	Last day of iodination and details therapeutic treatment	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Last day of iodination work (For Iodine Handling)</p>
+			</div>
+			<div class="column is-2 field">
+				<div class="control has-icons-left">
+					<input class="input is-medium" type="date" id="dtIodination" placeholder="Click to open calender" [(ngModel)]="selected_iodination_last_date">
+					<!-- <span class="icon is-left">
+						<i class="fas fa-calendar-alt"></i>
+					</span> -->
+				</div>
+			</div>
+			<div class="column is-2">
+				<input class="input is-primary " type="text" placeholder="" maxlength="512" [(ngModel)]="selected_iodination_last_date_other">
+			</div>
+
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Details of therapeutic treatment (if any)</p>
+			</div>
+			<div class="column is-4">
+				<input class="input is-primary " type="text" placeholder="" maxlength="512" [(ngModel)]="selected_therapeutic_treatment_details">
+			</div>
+		</div><br/>
+
+
+
+		<!--	Particle size solubility type and isotopic composition of contaminants	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Particle size<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-2">
+				<div class="select is-primary is-fullwidth">
+					<select [(ngModel)]="selected_particle_size" name="ddlPS">
+						<option value="" selected>--Select--</option>
+						<option [value]="s" *ngFor="let s of arrParticleSizes">{{s}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="column is-2">
+				<input class="input is-primary " type="text" placeholder="" maxlength="512" [(ngModel)]="selected_particle_size_other">
+			</div>
+
+			
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Isotopic composition of the contaminants</p>
+			</div>
+			<div class="column is-4">
+				<input class="input is-primary " type="text" placeholder="" maxlength="512" [(ngModel)]="selected_isotopic_comp_contaminants">
+			</div>
+		</div><br/>
+
+
+		<!--	Pu:Am ratio, Class and date of previous monitoring	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Pu:Am ratio</p>
+			</div>
+			<div class="column is-2">
+				<input class="input is-primary " type="text" placeholder="" maxlength="512" [(ngModel)]="selected_pu_am_ration">
+			</div>
+
+
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Solubility type</p>
+			</div>
+			<div class="column is-1">
+				<div class="select is-primary is-fullwidth">
+					<select [(ngModel)]="selected_class" name="ddlClass">
+						<option value="0" selected>--Select--</option>
+						<option [value]="c.id" *ngFor="let c of arrClasses">{{c.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="column is-2">
+				<input class="input is-primary " type="text" placeholder="" maxlength="20" [(ngModel)]="selected_class_other">
+			</div>
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Date of previous monitoring (Monitoring Lab)</p>
+			</div>
+			<div class="column is-2">
+				{{date_of_previous_monitoring}}
+			</div>
+		</div><br/>
+
+
+		<!--	Weight, height, chest circumefrence	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Weight (Kg)</p>
+			</div>
+			<div class="column is-2">
+				<input class="input is-primary " type="number" placeholder="" maxlength="5" [(ngModel)]="selected_weight">
+			</div>
+
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Height (cm)</p>
+			</div>
+			<div class="column is-2">
+				<input class="input is-primary " type="number" placeholder="" maxlength="5" [(ngModel)]="selected_height">
+			</div>
+
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Chest circumference (cm)</p>
+			</div>
+			<div class="column is-2">
+				<input class="input is-primary " type="number" placeholder="" maxlength="5" [(ngModel)]="selected_chest_cc">
+			</div>
+		</div><br/>
+
+
+		<!--	Comments	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Comments</p>
+			</div>
+			<div class="column is-10">
+				<textarea class="textarea is-primary" placeholder="Please mention any other details here..." [(ngModel)]="selected_comments"></textarea>
+			</div>
+		</div><br/>
+
+		<button class="button is-large is-primary" (click)="submit_10H_form()">Save changes</button>
+	</div>
+</div>
+

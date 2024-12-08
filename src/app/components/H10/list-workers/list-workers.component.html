@@ -1,0 +1,153 @@
+<section class="section">
+	<div class="title is-2">
+		List of radiation workers
+	</div>
+
+	<div class="subtitle is-3">
+		To fill new 10H form, search for the radiation worker using the form given below. 
+		If the radiation worker is not found then click 
+		<button class="button is-primary ml-5 is-small" (click)="goto_worker_registration_page()">New worker registration</button>
+	</div>
+	
+	<div class="card" style="margin-left: 25%; width: 50%">
+		<div class="card-header">
+			<div class="card-header-title has-background-primary has-text-white title">Search radiation worker</div>
+		</div>
+		<div class="card-content">
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Search</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<input class="input is-medium" type="text" name="search" placeholder="Search" [(ngModel)]="search_val" (keydown.enter)="perform_search()">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<p class="buttons">
+				<button class="button is-primary ml-5 is-light" (click)="perform_search()">Search</button>
+				<button class="button is-danger ml-5 is-light" (click)="reset_form()">Reset</button>
+			</p>
+
+			For new registration click button: 
+			<button class="button is-primary ml-5 is-small" (click)="goto_worker_registration_page()">New worker registration</button>
+
+			<br>
+			<p><b>NOTE:</b> Search by name, employee number, Organisation, date of birth (dd-mm-yyyy) and date of joining (dd-mm-yyyy)</p>
+		</div>
+	</div>
+	<br/>
+	
+	<!-- <p class="is-italic">Date format is YYYY-MM-DD unless otherwise specified explicitly</p> -->
+
+
+
+
+	<!--	Pagination logic	-->
+
+	<p class="is-italic is-pulled-right">Showing {{arrPeopleRecords.length}} (of total {{total_records}}) records on page {{(page_num+1)}}</p>
+	<br/>
+	<p class="buttons is-pulled-right">
+		<button class="button is-primary is-light" title="Goto first page" [attr.disabled]="page_num == 0 ? true : null" (click)="goto_first_page()">
+			<span class="icon is-small">
+				<i class="fas fa-angle-double-left"></i>
+			</span>
+		</button>
+		<button class="button is-primary is-light" title="Goto previous page" [attr.disabled]="page_num == 0 ? true : null" (click)="goto_previous_page()">
+			<span class="icon is-small">
+				<i class="fas fa-angle-left"></i>
+			</span>
+		</button>
+		<button class="button is-primary is-light" title="Goto next page" [attr.disabled]="arrPeopleRecords.length == 0 ? true : null" (click)="goto_next_page()">
+			<span class="icon is-small">
+				<i class="fas fa-angle-right"></i>
+			</span>
+		</button>
+	</p><br/><br/><br/>
+	
+	<progress class="progress is-small is-primary" style="height: 5px;" max="100" *ngIf="is_loading"></progress>
+
+
+
+	<!--	Worker records table	-->
+
+	<div class="table-container">
+		<table class="table is-fullwidth is-striped  is-hoverable " id="example">
+			<tr class="has-background-primary">
+				<th class="has-text-white">Photo</th>
+				<th class="has-text-white">Name</th>
+				<th class="has-text-white">Contract worker ?</th>
+				<th class="has-text-white">Employee/Pass No</th>
+				<th class="has-text-white">Date of Birth</th>
+				<th class="has-text-white">Date of Joining</th>
+				<th class="has-text-white">Organisation Name</th>
+				<th class="has-text-white">Gender</th>
+				<th class="has-text-white">Remarks</th>
+				<th style="min-width: 150px;"></th>
+	
+			</tr>
+	
+			<tbody>
+				<tr *ngFor="let p of arrPeopleRecords">
+					<td><img [src]="p.photo_url" alt="No image" style="width: 200px; height: 200px"/></td>
+					<td>{{p.name}}</td>
+					<td>
+						<span *ngIf="p.is_worker">Yes</span>
+						<span *ngIf="!p.is_worker">No</span>
+					</td>
+					<td>{{p.empno}}</td>
+					<!-- <td>{{p.dob | amParse: 'YYYY-MM-DD' | amDateFormat: 'MMMM Do YYYY'}}</td> -->
+					<td>{{p.dob | amParse: 'YYYY-MM-DD' | amDateFormat: 'DD-MM-YYYY'}}</td>
+					<td>{{p.doj | amParse: 'YYYY-MM-DD' | amDateFormat: 'DD-MM-YYYY'}}</td>
+					<td>{{p.firm_name}}</td>
+					<td>{{p.gender}}</td>
+					<td>{{p.remarks}}</td>
+					<td>
+						<div class="field is-grouped">
+							<p class="control">
+								<button class="button is-primary is-small is-light" (click)="fill_10h_form(p.id)">New 10H</button>
+							</p>
+							<p class="control">
+								<button class="button is-link is-small is-light" (click)="list_of_10H_forms(p.id)">List 10H</button>
+							</p>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<p *ngIf="arrPeopleRecords.length == 0 && !is_loading">No record found!</p>
+	</div>
+	
+
+
+	<!--	Pagination logic	-->
+
+	<ng-container *ngIf="arrPeopleRecords.length > 0">
+
+		<p class="is-italic is-pulled-right">Showing {{arrPeopleRecords.length}} (of total {{total_records}}) records on page {{(page_num+1)}}</p>
+		<br/>
+		<p class="buttons is-pulled-right">
+			<button class="button is-primary is-light" title="Goto first page" [attr.disabled]="page_num == 0 ? true : null" (click)="goto_first_page()">
+				<span class="icon is-small">
+					<i class="fas fa-angle-double-left"></i>
+				</span>
+			</button>
+			<button class="button is-primary is-light" title="Goto previous page" [attr.disabled]="page_num == 0 ? true : null" (click)="goto_previous_page()">
+				<span class="icon is-small">
+					<i class="fas fa-angle-left"></i>
+				</span>
+			</button>
+			<button class="button is-primary is-light" title="Goto next page" [attr.disabled]="arrPeopleRecords.length == 0 ? true : null" (click)="goto_next_page()">
+				<span class="icon is-small">
+					<i class="fas fa-angle-right"></i>
+				</span>
+			</button>
+		</p><br/>
+
+	</ng-container>
+
+</section>

@@ -1,0 +1,59 @@
+<section class="section" [ngClass]="{ 'is-clipped': is_open_plants_modal }">
+	<div class="title is-2">
+		List of Report Viewers and their plants
+	</div>
+	<progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+	<p *ngIf="is_loading">Loading. Please wait.....</p>
+
+	<p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+	<div class="table-container" >
+		<table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+			<thead>
+				<tr class="has-background-primary">
+					<td class="has-text-white is-size-4">Id</td>
+					<td class="has-text-white is-size-4">Username</td>
+					<td class="has-text-white is-size-4">First name</td>
+					<td class="has-text-white is-size-4">Last name</td>
+					<td class="has-text-white is-size-4">Email</td>
+					<td class="has-text-white is-size-4">Plants assigned</td>
+					<td class="has-text-white is-size-4"></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let r of arrRecords">
+					<td>{{r.id}}</td>
+					<td>{{r.username}}</td>
+					<td>{{r.first_name}}</td>
+					<td>{{r.last_name}}</td>
+					<td>{{r.email}}</td>
+					<td>
+						{{format_plants(r.plants)}}
+					</td>
+					<td>
+						<button class="button is-danger is-light" (click)="ask_for_plant_change(r.id, r.plants)">Change assignment</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_plants_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<p class="subtitle">Please select plants to assign to the Report Viewer</p>
+			<p class="is-italic has-text-danger">NOTE: Plants shown in red are strategic in nature</p>
+			<div class="field" *ngFor="let obj of arrPlants">
+				<input class="is-checkradio" [attr.id]="obj.ui_name" type="checkbox" [attr.name]="obj.ui_name" [checked]="obj.is_checked" (change)="plant_checked_unchecked(obj, $event)">
+				<label [attr.for]="obj.ui_name" [ngClass]="{ 'has-text-danger-dark' : obj.is_strategic }">{{obj.name}}</label>
+			</div>
+			<button class="button is-danger is-pulled-left" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" (click)="change_assignment()">Change assignment</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>
+

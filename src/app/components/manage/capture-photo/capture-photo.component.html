@@ -1,0 +1,29 @@
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-title">Capture photo</div>
+    </div>
+    <div class="card-content">
+        <div class="columns">
+            <div class="column">
+                <webcam [trigger]="triggerObservable"
+                        imageType="image/png" 
+                        [width]="500" 
+                        [height]="500" 
+                        [allowCameraSwitch] = "true"
+                        [imageQuality] = "1"
+                        (imageCapture)="photo_captured($event)"
+                        (initError)="camera_init_error($event)">
+                </webcam>
+            </div>
+            <div class="column">
+                <img [src]="secure_image" alt="No image captured yet"/>
+            </div>
+        </div>
+        
+    </div>
+    <div class="card-footer">
+        <button class="card-footer-item button is-primary is-light" (click)="capture_photo()">Capture</button>
+        <button class="card-footer-item button is-primary" (click)="save_snapshot()" [attr.disabled]="encoded_image == '' ? true : null">Save</button>
+        <button class="card-footer-item button is-warning" (click)="close()">Cancel</button>
+    </div>
+</div>

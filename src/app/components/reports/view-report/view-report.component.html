@@ -1,0 +1,37 @@
+<section class="section">
+    <p class="title" *ngIf="report != null">Report name : {{report!.name}}</p>
+
+    <p class="subtitle" *ngIf="report != null">Status: {{status}}</p>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+
+    <div class="buttons">
+        
+        <button class="button is-small has-tooltip-arrow is-warning" (click)="go_back()" data-tooltip="Click to go back">
+            <span class="icon is-small">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+        </button>
+
+        <button class="button is-small has-tooltip-arrow is-primary" *ngIf="report_id > 0" (click)="download_pdf()" data-tooltip="Click to download report as PDF">
+            <span class="icon is-small">
+                <i class="fas fa-download"></i>
+            </span>
+        </button>
+
+        <button class="button is-small has-tooltip-arrow is-success" *ngIf="report_id <= 0" (click)="save_report()" data-tooltip="Click to save the report">
+            <span class="icon is-small">
+                <i class="fas fa-save"></i>
+            </span>
+        </button>
+
+    </div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_generating_report"></progress>
+    <p *ngIf="is_generating_report">Generating report. Please wait.....</p>
+
+    <hr/>
+    <div [innerHtml]="report_contents" #doc></div>
+</section>

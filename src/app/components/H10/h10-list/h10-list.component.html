@@ -1,0 +1,176 @@
+
+
+<!--	Elements above the table	-->
+
+<p class="is-italic is-pulled-right">Showing {{arrRecords.length}} records on page {{(page_num+1)}}</p>
+<br/>
+<p class="buttons is-pulled-right">
+	<button class="button is-primary is-light" title="Goto first page" [attr.disabled]="page_num == 0 ? true : null" (click)="goto_first_page()">
+		<span class="icon is-small">
+			<i class="fas fa-angle-double-left"></i>
+		</span>
+	</button>
+	<button class="button is-primary is-light" title="Goto previous page" [attr.disabled]="page_num == 0 ? true : null" (click)="goto_previous_page()">
+		<span class="icon is-small">
+			<i class="fas fa-angle-left"></i>
+		</span>
+	</button>
+	<button class="button is-primary is-light" title="Goto next page" [attr.disabled]="arrRecords.length == 0 ? true : null" (click)="goto_next_page()">
+		<span class="icon is-small">
+			<i class="fas fa-angle-right"></i>
+		</span>
+	</button>
+</p><br/><br/><br/>
+<progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+<p *ngIf="is_loading">Loading. Please wait.....</p>
+
+
+<!--	List of 10H forms table	-->
+<div class="table-container">
+	<table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0" >
+		<thead>
+			<tr class="has-background-primary ">
+				<td class="has-text-white is-size-4"> Id</td>
+				<td class="has-text-white is-size-4"> Name </td>
+				<td class="has-text-white is-size-4"> TLD </td>
+				<td class="has-text-white is-size-4"> Division/Plant </td>
+				<td class="has-text-white is-size-4"> Type of monitoring </td>
+				<td class="has-text-white is-size-4" *ngIf="(!is_only_hp) && (form_type != '10 H submitted')"> Sample # </td>
+				<td class="has-text-white is-size-4" *ngIf="form_type != 'Accepted'"> Sample coll. date </td>
+				<td class="has-text-white is-size-4" *ngIf="form_type == 'Accepted'"> DOC </td>
+				<td class="has-text-white is-size-4" *ngIf="form_type == 'Accepted'"> Accepted by </td>
+				<td class="has-text-white is-size-4"> Worker type </td>
+				<!-- <td class="has-text-white is-size-4"> Status </td> -->
+				<td class="has-text-white is-size-4"> HP </td>
+				<td class="has-text-white is-size-4" *ngIf="form_type == 'Being processed'"> Observ. </td>
+				<td class="has-text-white is-size-4">  </td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let r of arrRecords">
+				<td>{{r.id}}</td>
+				<td>{{r.person_name}}</td>
+				<td>
+					<button *ngIf="(r.tld != null) && (r.tld != '')" class="button is-link is-inverted" (click)="view_10H_form(r.id)">{{r.tld}}</button>
+					<button *ngIf="(r.tld == null) || (r.tld == '')" class="button is-link is-inverted" (click)="view_10H_form(r.id)">NOT ISSUED</button>
+				</td>
+				<td>{{r.division_name}}/{{r.plant_name}}</td>
+				<td>{{r.tom}}</td>
+				<td *ngIf="(!is_only_hp) && (form_type != '10 H submitted')">
+					<span *ngIf="r.sample_no">{{r.sample_no}}</span>
+					<span *ngIf="!r.sample_no">..</span>
+				</td>
+				<td *ngIf="form_type != 'Accepted'">
+					{{r.collectionDate | amParse: 'YYYY-MM-DD' | amDateFormat: 'DD-MM-YYYY'}}
+				</td>
+				<td *ngIf="form_type == 'Accepted'">
+					{{r.received_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'DD-MM-YYYY HH:mm:ss'}}
+				</td>
+				<td *ngIf="form_type == 'Accepted'">
+					{{r.accepted_by_name}}
+				</td>
+				<td>{{r.worker_type}}</td>
+				<!-- <td>{{r.status}}</td> -->
+				<td>{{r.hp_name}}</td>
+				<td *ngIf="form_type == 'Being processed'">
+					<pre *ngIf="r.cal_display_val">{{r.cal_display_val}}</pre>
+				</td>
+				<td>
+					<p class="buttons">
+
+						<!--	Edit button	-->
+
+						<button class="button is-small is-warning" *ngIf="(form_type == form_types[0]) && is_only_hp" (click)="modify_10_form(r.id)" data-tooltip="Edit this 10H form">
+							<span class="icon is-small">
+								<i class="fas fa-pencil-alt"></i>
+							</span>
+						</button>
+
+
+
+						<!--	Accept button	-->
+
+						<button class="button is-small is-success" *ngIf="(form_type == form_types[0]) && is_tech" (click)="accept_10H_form(r.id)" data-tooltip="Click to accept this 10H form">
+							<span class="icon is-small">
+								<i class="fas fa-check"></i>
+							</span>
+						</button>
+
+
+
+						<!--	Monitoring details button	-->
+
+						<button class="button is-small is-success" *ngIf="[form_types[1], form_types[2], form_types[3], form_types[4], form_types[5], form_types[6]].includes(form_type) && !is_only_hp" (click)="view_monitoring_details(r.id)" data-tooltip="Click to view monitoring details">
+							<span class="icon is-small">
+								<i class="fas fa-list-ul"></i>
+							</span>
+						</button>
+
+
+
+						<!--	Analysis button	-->
+
+						<button class="button is-small is-link" *ngIf="[form_types[1], form_types[2], form_types[3], form_types[4], form_types[5], form_types[6]].includes(form_type) && !is_only_hp" (click)="perform_analysis(r.id)" data-tooltip="Click to view analysis">
+							<span class="icon is-small">
+								<i class="fas fa-flask"></i>
+							</span>
+						</button>
+
+
+
+						<!--	Reject button	-->
+
+						<button class="button is-small is-danger" *ngIf="[form_types[0], form_types[1], form_types[3], form_types[6]].includes(form_type) && is_admin" data-tooltip="Click to reject this form" (click)="reject_10H_form(r.id)">
+							<span class="icon is-small">
+								<i class="fas fa-trash"></i>
+							</span>
+						</button>
+
+
+
+						<!--	Print button	-->
+
+						<button class="button is-small is-info" (click)="print_10H_form(r.id)" data-tooltip="Click to download this form as PDF">
+							<span class="icon is-small">
+								<i class="fas fa-download"></i>
+							</span>
+						</button>
+
+
+
+						<!--	Sample spoiled button	-->
+
+						<button class="button is-small is-danger" (click)="sample_spoiled(r.id)" *ngIf="[form_types[1], form_types[3]].includes(form_type) && (is_admin)" data-tooltip="Click to mark this form as sample spoiled">
+							<span class="icon is-small">
+								<i class="fas fa-fill-drip"></i>
+							</span>
+						</button>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="is-italic" *ngIf="arrRecords.length == 0 && !is_loading">No 10H form found!</p>
+</div>
+
+
+
+
+<!--	Rejection reason	-->
+<div class="modal" [ngClass]="{ 'is-active': is_open_reject_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<p class="subtitle">Please provide reason for rejection</p>
+			<div class="field">
+				<input class="input is-primary" id="rejection_reason" placeholder="Specify rejection reason here...."  name="rejection_reason" type="text" maxlength="512" [(ngModel)]="rejection_reason">
+				<label for="rejection_reason">Reason</label>
+			</div>
+			<button class="button is-danger is-pulled-left" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" (click)="actuate_form_rejection()">Reject form</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close"></button>
+</div>

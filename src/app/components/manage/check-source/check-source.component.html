@@ -1,0 +1,144 @@
+<section class="section">
+    <div class="title is-2">
+        List of standard source records
+    </div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="has-text-right">
+        <button class="button is-warning" [ngClass]="{ 'is-loading': is_creating }" (click)="open_modal()">Add New</button>
+    </div>
+    
+    <p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+    
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+    
+                <tr class="has-background-primary ">
+                    <td class="has-text-white is-size-4"> Id</td>
+                    <td class="has-text-white is-size-4"> Name </td>
+					<td class="has-text-white is-size-4"> Isotopes </td>
+                    <td class="has-text-white is-size-4"> Activity </td>
+                    <td class="has-text-white is-size-4"> Attachment </td>
+					<td class="has-text-white is-size-4"> Is enabled? </td>
+                    <td class="has-text-white is-size-4"> Comments </td>
+                    <td class="has-text-white is-size-4"> Created on </td>
+                    <td class="has-text-white is-size-4"> Created by </td>
+                </tr>
+                
+                <tr *ngFor="let d of arrRecords">
+                    <td>{{d.id}}</td>
+                    <td>{{d.name}}</td>
+					<td>{{get_isotope_names(d.arrIsotopes)}}</td>
+                    <td>{{d.activity}}</td>
+                    <td>
+                        <button class="button is-primary is-outlined" [ngClass]="{ 'is-loading': is_downloading }" *ngIf="d.is_attached" (click)="download_attachment(d.id, d.file_name)">Download</button>
+                        <button class="button is-static" *ngIf="!d.is_attached" disabled>Download</button>
+                    </td>
+					<td>
+                        <span *ngIf="d.is_active">Yes</span>
+                        <span *ngIf="!d.is_active">No</span>
+
+                        &nbsp;
+                        <button class="button is-danger is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="d.is_active" (click)="enable_disable_record(d.id, false)">De-activate</button>
+                        <button class="button is-primary is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="!d.is_active" (click)="enable_disable_record(d.id, true)">Activate</button>
+                    </td>
+                    <td>{{d.comments}}</td>
+                    <td>{{d.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+                    <td>{{d.created_by_name}}</td>
+                </tr>
+        </table>
+        <p class="is-italic" *ngIf="arrRecords.length == 0 && !is_loading">No standard source record found!</p>
+    </div>
+</section>
+
+
+
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_modal }" *ngIf="is_open_modal">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			
+            <p class="title">New standard source record</p>
+
+
+            <!--    Name    -->
+
+            <div class="columns">
+                <div class="column is-4">Name</div>
+                <div class="column is-8">
+                    <input class="input is-primary is-fullwidth" type="text" placeholder="Check source name" [(ngModel)]="name" maxlength="100">
+                </div>
+            </div><br/>
+
+
+            <!--    Isotopes    -->
+
+            <div class="columns is-desktop">
+				<div class="column is-4">
+					<p class="has-text-weight-bold">Isotopes</p>
+				</div>
+				<div class="column is-8">
+					<div class="field" *ngFor="let obj of arrIsotopes">
+						<input class="is-checkradio" [attr.id]="obj.ui_name" type="checkbox" [attr.name]="obj.ui_name" [checked]="obj.is_checked" (change)="isotope_checked_unchecked(obj, $event)">
+						<label [attr.for]="obj.ui_name">{{obj.name}}</label>
+					</div>
+				</div>
+			</div><br/>
+
+
+			<!--    Activity    -->
+
+            <div class="columns">
+                <div class="column is-4">Activity (Bq)</div>
+                <div class="column is-8">
+                    <input class="input is-primary is-fullwidth" type="text" placeholder="Isotopes activity" [(ngModel)]="activity_added" >
+                </div>
+            </div><br/>
+
+
+			<!--    Attachment    -->
+
+            <div class="columns">
+                <div class="column is-4">Attachment</div>
+                <div class="column is-8">
+					<div class="file has-name is-boxed">
+						<label class="file-label">
+							<input class="file-input" type="file" name="resume" (change)="files_selected($event)">
+							<span class="file-cta">
+								<span class="file-icon">
+									<i class="fas fa-upload"></i>
+								</span>
+								<span class="file-label">
+									Choose a file…
+								</span>
+							</span>
+							<span class="file-name">
+								{{file_name}}
+							</span>
+						</label>
+					</div>
+                </div>
+            </div><br/>
+
+
+            <!--    Comments    -->
+
+            <div class="columns">
+                <div class="column is-4">Comments</div>
+                <div class="column is-8">
+                    <textarea class="textarea is-primary is-fullwidth" placeholder="any comments...." [(ngModel)]="comments" maxlength="1000"></textarea>
+                </div>
+            </div><br/>
+
+
+			<button class="button is-danger is-pulled-left" [ngClass]="{ 'is-loading': is_creating }" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" [ngClass]="{ 'is-loading': is_creating }" (click)="create_new_check_source()">Create</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>

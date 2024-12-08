@@ -1,0 +1,79 @@
+<section class="section" [ngClass]="{ 'is-clipped': is_open_create_tld }">
+	<div class="title is-2">
+		List of TLDs
+	</div>
+
+	<progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+	<p *ngIf="is_loading">Loading. Please wait.....</p>
+
+	<div class="has-text-right" >
+		<button class="button is-warning" (click)="ask_for_new_tld()">Add New</button>
+	</div>
+
+	<p class="has-text-right" *ngIf="!is_loading">{{arrTLDS.length}} record(s) found!</p>
+	<div class="table-container" >
+
+		<table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrTLDS.length > 0 && !is_loading" >
+				<tr class="has-background-primary">
+					<td class="has-text-white is-size-4"> Id</td>
+					<td class="has-text-white is-size-4"> TLD </td>
+					<td class="has-text-white is-size-4"> Plant </td>
+				</tr>
+				
+				<tr *ngFor="let p of arrTLDS">
+					<td>{{p.id}}</td>
+					<td>{{p.tld}}</td>
+					<td>{{p.plant_name}}</td>
+				</tr>
+		</table>
+
+		<p class="is-italic" *ngIf="arrTLDS.length == 0 && !is_loading">No TLD found!</p>
+	</div>
+</section>
+
+
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_create_tld }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			<p class="subtitle">Create new TLD</p>
+
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">TLD name</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<p class="control">
+							<input class="input" type="text" name="tld" [(ngModel)]="new_tld_name" placeholder="Enter TLD here..." maxlength="10">
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Plant</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<div class="select is-primary">
+								<select [(ngModel)]="new_plant_id" name="new_plant_id">
+									<option disabled value="-1" selected>Select plant</option>
+									<option *ngFor="let p of arrPlants" [value]="p.id">{{p.name}}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<button class="button is-danger is-pulled-left" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" (click)="create_tld()">Create TLD</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>

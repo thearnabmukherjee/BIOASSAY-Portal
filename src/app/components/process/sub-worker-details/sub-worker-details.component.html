@@ -1,0 +1,118 @@
+<!-- <div class="card" *ngIf="personal_details_obj"> -->
+	<div class="card-content" *ngIf="personal_details_obj">
+		<div class="columns is-desktop">
+
+			<div class="column is-4">
+				<img [src]="person_image_url" alt="No Image found!"/>
+			</div>
+
+			<div class="column is-8">
+				
+				<div class="columns is-desktop">
+					
+					<div class="column is-3">
+						<p class="has-text-weight-bold">Name</p>
+					</div>
+					<div class="column is-3">
+						{{personal_details_obj.name}}
+					</div>
+
+					<div class="column is-3">
+						<p class="has-text-weight-bold">Contract worker ?</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj.is_worker">Yes</span>
+						<span *ngIf="!personal_details_obj.is_worker">No</span>
+					</div>
+
+				</div>
+
+
+				<div class="columns is-desktop">
+					
+					<div class="column is-3">
+						<p class="has-text-weight-bold">Employee no.</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj.empno == null || personal_details_obj.empno == ''">-NA-</span>
+						<span *ngIf="personal_details_obj.empno != null && personal_details_obj.empno.length > 0">{{personal_details_obj.empno}}</span>
+					</div>
+
+					<div class="column is-3">
+						<p class="has-text-weight-bold">Organisation</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj.firm_name == null || personal_details_obj.firm_name == ''">-NA-</span>
+						<span *ngIf="personal_details_obj.firm_name != null && personal_details_obj.firm_name.length > 0">{{personal_details_obj.firm_name}}</span>
+					</div>
+
+				</div>
+
+
+
+				<div class="columns is-desktop">
+					
+					<div class="column is-3">
+						<p class="has-text-weight-bold">Gender</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj.gender == null || personal_details_obj.gender == ''">-NA-</span>
+						<span *ngIf="personal_details_obj.gender != null && personal_details_obj.gender.length > 0">{{personal_details_obj.gender}}</span>
+					</div>
+
+					<div class="column is-3">
+						<p class="has-text-weight-bold">Remarks</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj.remarks == null || personal_details_obj.remarks == ''">-NA-</span>
+						<span *ngIf="personal_details_obj.remarks != null && personal_details_obj.remarks.length > 0">{{personal_details_obj.remarks}}</span>
+					</div>
+
+				</div>
+
+
+
+				<div class="columns is-desktop">
+					
+					<div class="column is-3">
+						<p class="has-text-weight-bold">DOB</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj.dob == null || personal_details_obj.dob == ''">-NA-</span>
+						<span *ngIf="personal_details_obj.dob != null && personal_details_obj.dob.length > 0">{{personal_details_obj.dob}}</span>
+					</div>
+
+					<div class="column is-3">
+						<p class="has-text-weight-bold">Registered on</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj.created_on == null || personal_details_obj.created_on == ''">-NA-</span>
+						<span *ngIf="personal_details_obj.created_on != null && personal_details_obj.created_on.length > 0">{{personal_details_obj.created_on}}</span>
+					</div>
+
+				</div>
+
+
+				<div class="columns is-desktop">
+					
+					<div class="column is-3">
+						<p class="has-text-weight-bold">DOJ</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj.doj == null || personal_details_obj.doj == ''">-NA-</span>
+						<span *ngIf="personal_details_obj.doj != null && personal_details_obj.doj.length > 0">{{personal_details_obj.doj}}</span>
+					</div>
+
+					<div class="column is-3">
+						<p class="has-text-weight-bold">Registered by</p>
+					</div>
+					<div class="column is-3">
+						<span *ngIf="personal_details_obj != null">{{personal_details_obj.created_by_name}}</span>
+						<span *ngIf="personal_details_obj == null">-NA-</span>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+<!-- </div> -->

@@ -1,0 +1,272 @@
+<section class="">
+
+	<div class="title is-2" *ngIf="(signed_filter == 'Signed') && (sent_sign_filter == 'Sent')">List of approved reports</div>
+	<div class="title is-2" *ngIf="(signed_filter == 'Un-signed') && (sent_sign_filter == 'All')">List of un-approved reports</div>
+	<div class="title is-2" *ngIf="(signed_filter == 'All') && (sent_sign_filter == 'Sent')">List of sent for approval reports</div>
+	<div class="title is-2" *ngIf="(signed_filter == 'All') && (sent_sign_filter == 'Not sent')">List of not-sent for approval reports</div>
+	<div class="title is-2" *ngIf="(signed_filter == 'All') && (sent_sign_filter == 'All')">List of all reports</div>
+
+	<div class="columns is-centered mt-4">
+		<div class="column is-half">
+			<div class="card">
+				<header class="card-header">
+					<p class="card-header-title has-background-primary has-text-white title">Search</p>
+				</header>
+				<div class="content ml-2 mr-2 pl-2 pr-2 mt-2 pt-2">
+					<div class="columns is-gapless">
+						<div class="column is-2">Search</div>
+						<div class="column is-10">
+							<input class="input is-primary" type="text" placeholder="Search...." [(ngModel)]="report_filter_value">
+						</div>
+					</div>
+					<div class="columns is-gapless">
+						<div class="column is-2">Report type</div>
+						<div class="column is-10">
+							<div class="select is-primary is-fullwidth">
+								<select [(ngModel)]="report_filter_report_type">
+									<option>All</option>
+									<option>Routine</option>
+									<option>Baseline</option>
+									<option>Superannuation</option>
+									<option>Termination</option>
+									<option>Special</option>
+									<option>Task-related</option>
+									<option>Confirmatory</option>
+									<option>Follow-up</option>
+									<!-- <option>Contract worker special</option> -->
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="columns is-gapless">
+						<div class="column is-2">Start date</div>
+						<div class="column is-4">
+							<input class="input is-medium" id="dtStartDate" type="date" [(ngModel)]="start_date">
+						</div>
+
+						<div class="column is-2">End date</div>
+						<div class="column is-4">
+							<input class="input is-medium" id="dtEndDate" type="date" [(ngModel)]="end_date">
+						</div>
+					</div>
+				</div>
+				<footer class="card-footer">
+					<button class="button is-primary ml-2 mr-2 mt-2 mb-2" (click)="perform_search()" [ngClass]="{ 'is-loading': is_loading }">Search</button>
+				</footer>
+			</div>
+		</div>
+	</div>
+
+	<div class="box">
+		<p class="subtitle">New report</p>
+
+		<div class="field is-grouped has-text-right">
+			<p class="control">
+				<button class="button is-primary" (click)="create_report('Routine')">
+					<span class="icon is-small">
+						<i class="fas fa-clock"></i>
+					</span>&nbsp;&nbsp;
+					Routine
+				</button>
+			</p>
+
+			<p class="control">
+				<button class="button is-warning" (click)="create_report('Baseline')">
+					<span class="icon is-small">
+						<i class="fas fa-grip-lines"></i>
+					</span>&nbsp;&nbsp;
+					Baseline
+				</button>
+			</p>
+
+			<p class="control">
+				<button class="button is-link" (click)="create_report('Superannuation')">
+					<span class="icon is-small">
+						<i class="fas fa-door-open"></i>
+					</span>&nbsp;&nbsp;
+					Superannuation
+				</button>
+			</p>
+
+			<p class="control">
+				<button class="button is-danger is-light" (click)="create_report('Termination')">
+					<span class="icon is-small">
+						<i class="fas fa-unlink"></i>
+					</span>&nbsp;&nbsp;
+					Termination
+				</button>
+			</p>
+
+			<p class="control">
+				<button class="button is-info is-light" (click)="create_report('Special')">
+					<span class="icon is-small">
+						<i class="fas fa-user-astronaut"></i>
+					</span>&nbsp;&nbsp;
+					Special
+				</button>
+			</p>
+
+			<p class="control">
+				<button class="button is-info is-light" (click)="create_report('Task-related')">
+					<span class="icon is-small">
+						<i class="fas fa-user-astronaut"></i>
+					</span>&nbsp;&nbsp;
+					Task related
+				</button>
+			</p>
+
+			<p class="control">
+				<button class="button is-info is-light" (click)="create_report('Confirmatory')">
+					<span class="icon is-small">
+						<i class="fas fa-user-astronaut"></i>
+					</span>&nbsp;&nbsp;
+					Confirmatory
+				</button>
+			</p>
+
+			<p class="control">
+				<button class="button is-info is-light" (click)="create_report('Follow-up')">
+					<span class="icon is-small">
+						<i class="fas fa-user-astronaut"></i>
+					</span>&nbsp;&nbsp;
+					Follow up
+				</button>
+			</p>
+		</div>
+	</div><br/>
+
+    <div class="title is-2">List of {{report_filter_report_type_deffered}} reports</div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+    <br/>
+
+	
+
+    <!--    List of reports    -->
+
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+            <thead>
+                <tr class="has-background-primary">
+                    <th class="has-text-white is-size-4">Id</th>
+                    <th class="has-text-white is-size-4">Name</th>
+					<!-- <th class="has-text-white is-size-4">Start date</th>
+					<th class="has-text-white is-size-4">End date</th> -->
+					<th class="has-text-white is-size-4">Period (DD-MM-YYYY)</th>
+					<th class="has-text-white is-size-4">Division</th>
+					<th class="has-text-white is-size-4">Status</th>
+					<th class="has-text-white is-size-4">Sign 1</th>
+					<th class="has-text-white is-size-4">Sign 1 on</th>
+					<th class="has-text-white is-size-4">Sign 2</th>
+					<th class="has-text-white is-size-4">Sign 2 on</th>
+					<th class="has-text-white is-size-4">Enabled?</th>
+					<!-- <th class="has-text-white is-size-4">Created on</th>
+					<th class="has-text-white is-size-4">Created by</th> -->
+					<th class="has-text-white is-size-4">Creation</th>
+					<th class="has-text-white is-size-4">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let r of arrRecords">
+					<td>{{r.id}}</td>
+					<td>{{r.name}}</td>
+					<!-- <td>{{r.start_date | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY'}}</td> -->
+					<!-- <td>{{r.end_date | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY'}}</td> -->
+
+					<td>
+						{{r.start_date | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat:'DD-MM-YYYY'}}
+						⇒
+						{{r.end_date | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat:'DD-MM-YYYY'}}
+					</td>
+
+
+					<td>{{r.division_name}}</td>
+					<td>{{get_report_status(r)}}</td>
+					<td>
+						<span *ngIf="r.approved_by1">{{r.approved_by1_name}}</span>
+						<span *ngIf="!r.approved_by1">-NA-</span>
+					</td>
+					<td>
+						<span *ngIf="r.approved_on1">{{r.approved_on1 | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'DD-MM-YYYY'}}</span>
+						<span *ngIf="!r.approved_on1">-NA-</span>
+					</td>
+					<td>
+						<span *ngIf="r.approved_by2">{{r.approved_by2_name}}</span>
+						<span *ngIf="!r.approved_by2">-NA-</span>
+					</td>
+					<td>
+						<span *ngIf="r.approved_on2">{{r.approved_on2 | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'DD-MM-YYYY'}}</span>
+						<span *ngIf="!r.approved_on2">-NA-</span>
+					</td>
+					<td>
+						<span *ngIf="r.is_active">Yes</span>
+						<span *ngIf="!r.is_active">No</span>
+
+						&nbsp;&nbsp;
+
+						<button class="button is-danger is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="r.is_active" (click)="enable_disable_report(r.id, false)" [attr.disabled]="r.is_sent_for_sign ? true : null">De-activate</button>
+                        <button class="button is-primary is-small" [ngClass]="{ 'is-loading': is_enabling_disabling }" *ngIf="!r.is_active" (click)="enable_disable_report(r.id, true)" [attr.disabled]="r.is_sent_for_sign ? true : null">Activate</button>
+					</td>
+					<!-- <td>{{r.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY'}}</td>
+					<td>{{r.created_by_name}}</td> -->
+					<td>By {{r.created_by_name}} on {{r.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'DD-MM-YYYY'}}</td>
+					<td>
+						<p class="buttons">
+							
+							<!--	View report contents	-->
+
+							<button class="button is-small has-tooltip-arrow is-warning" (click)="show_report_contents(r.id)" data-tooltip="View report contents">
+								<span class="icon is-small">
+									<i class="fas fa-eye"></i>
+								</span>
+							</button>
+
+
+							<!--	Send for signatures		-->
+
+							<button class="button is-small has-tooltip-arrow is-primary" (click)="send_for_signatures(r.id)" data-tooltip="Send for signatures" [attr.disabled]="(r.is_sent_for_sign || r.is_rejected || !r.is_active) ? true : null">
+								<span class="icon is-small">
+									<i class="fas fa-paper-plane"></i>
+								</span>
+							</button>
+
+
+							<!--	Sign the report	-->
+
+							<button class="button is-small has-tooltip-arrow is-link" (click)="sign_the_report(r.id)" data-tooltip="Approve this report" [attr.disabled]="(!r.is_sent_for_sign || r.is_rejected || !r.is_active || (r.approved_by1 != null && r.approved_by2 != null)) ? true : null">
+								<span class="icon is-small">
+									<i class="fas fa-signature"></i>
+								</span>
+							</button>
+
+
+							<!--	Reject this report	-->
+
+							<button class="button is-small has-tooltip-arrow is-danger" (click)="reject_the_report(r.id)" data-tooltip="Reject this report" [attr.disabled]="(!r.is_sent_for_sign || r.is_rejected || !r.is_active || (r.approved_by1 && r.approved_by2)) ? true : null">
+								<span class="icon is-small">
+									<i class="fas fa-ban"></i>
+								</span>
+							</button>
+
+
+						</p>
+					</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
+
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_new_report_modal }" *ngIf="is_open_new_report_modal">
+	<div class="modal-background"></div>
+	<div class="modal-content box">
+		<app-new-report [report-type]="selected_report_type" (closed)="close_modal()"></app-new-report>
+	</div>
+</div>

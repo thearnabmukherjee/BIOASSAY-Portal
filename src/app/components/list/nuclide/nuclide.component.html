@@ -1,0 +1,53 @@
+<section class="section" [ngClass]="{ 'is-clipped': is_open_modal }">
+    <div class="title is-2">
+        List of Nuclides
+    </div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="has-text-right">
+        <button class="button is-warning" (click)="ask_for_new_nuclide()">Add New</button>
+    </div>
+    
+    <p class="has-text-right" *ngIf="!is_loading">{{arrNuclides.length}} record(s) found!</p>
+    
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrNuclides.length > 0 && !is_loading" >
+    
+                <tr class="has-background-primary ">
+                    <td class="has-text-white is-size-4"> Id</td>
+                    <td class="has-text-white is-size-4"> Name </td>
+                    <td class="has-text-white is-size-4"> Assigned to </td>
+                </tr>
+                
+                <tr *ngFor="let d of arrNuclides">
+                    <td>{{d.id}}</td>
+                    <td>
+                        <sup>{{split_nuclide(d.name)[0]}}</sup>
+                        {{split_nuclide(d.name)[1]}}
+                        <sup>{{split_nuclide(d.name)[2]}}</sup>
+                    </td>
+                    <td>{{get_associated_plants(d.id)}}</td>
+                </tr>
+        </table>
+        <p class="is-italic" *ngIf="arrNuclides.length == 0 && !is_loading">No nuclide found!</p>
+    </div>
+</section>
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_modal }">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			
+            <p class="title">New nuclide name</p>
+            <input class="input is-medium is-primary" type="text" name="nuclide" [(ngModel)]="new_nuclide_name" placeholder="Nuclide name...." maxlength="50">
+
+			<button class="button is-danger is-pulled-left" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" (click)="create_nuclide()">Create</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>

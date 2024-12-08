@@ -1,0 +1,76 @@
+<section>
+    <div class="title is-2">
+        {{current_form_type}} 10H forms
+    </div>
+
+    <div class="card" style="margin-left: 25%; width: 50%">
+        <div class="card-header">
+			<div class="card-header-title has-background-primary has-text-white title">Search {{current_form_type}} 10H forms</div>
+		</div>
+        <div class="card-content">
+            <div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">Search</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<input class="input is-medium" type="text" name="search" placeholder="Search" [(ngModel)]="form_search_val" (keyup.enter)="search_enter_pressed($event)">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="subtitle">
+				Date of 10H submission
+			</div>
+
+            <div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">From</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<input class="input is-medium" id="dtStartDate" type="date" [(ngModel)]="start_date_time_value">
+						</div>
+					</div>
+				</div>
+			</div>
+
+            <div class="field is-horizontal">
+				<div class="field-label is-normal">
+					<label class="label">To</label>
+				</div>
+				<div class="field-body">
+					<div class="field">
+						<div class="control">
+							<input class="input is-medium" id="dtEndDate" type="date" [(ngModel)]="end_date_time_value">
+						</div>
+					</div>
+				</div>
+			</div>
+            
+            <br/>
+            <div class="buttons">
+                <button class="button is-primary ml-5" (click)="perform_search()">Search</button>
+                <button class="button is-link ml-5" (click)="reset_search()">Reset</button>
+            </div>
+            <br/>
+			<p class="has-text-justified">
+                <b>NOTE:</b> 
+                Search by division name, plant name, person name, worker type, TLD, CC no., Sample type, Sample type comments, collection duration, type of process, type of process comments,
+                type of monitoring, brief description, time of exposure, last iodination day comments, treatment details, particle size, particle size comments, isotopic composition,
+                Pu:Am ratio, comments, collection duration comments <span *ngIf="is_show_sample_no">, sample number</span> and HP token
+                <br/>
+                <!-- Start and end date filter applies to form creation/submission date only. -->
+            </p>
+        </div>
+    </div>
+
+	<h10-list [form-type]="current_form_type" 
+              [search-val]="search_val" 
+              [start-date]="start_date_time"
+              [end-date]="end_date_time"
+              (navigate)="navigate_to_url($event)"></h10-list>
+</section>

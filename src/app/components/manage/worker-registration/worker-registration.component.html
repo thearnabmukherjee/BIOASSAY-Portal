@@ -1,0 +1,82 @@
+<section class="section">
+    <p class="title">New radiation worker registration</p>
+    <table class="table is-fullwidth is-borderless">
+        <tr>
+            <th>Name</th>
+            <td><input class="input is-primary is-fullwidth" type="text" [(ngModel)]="name" maxlength="100"/></td>
+            <th>Gender</th>
+            <td>
+                <div class="select is-primary is-fullwidth">
+                    <select [(ngModel)]="gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>Worker type</th>
+            <td>
+                <div class="select is-primary is-fullwidth">
+                    <select [(ngModel)]="worker_type">
+                        <option value="Employee">Employee</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </td>
+            <th>Employee/Pass no.</th>
+            <td><input type="text" class="input is-primary" [(ngModel)]="empno"/></td>
+        </tr>
+        <tr>
+            <th>Date of birth</th>
+            <td>
+                <input class="input is-medium" id="dtDOB" type="date" placeholder="Date of birth" [(ngModel)]="selected_dob">
+            </td>
+            <th>Date of Joining</th>
+            <td>
+                <input class="input is-medium" id="dtDOJ" type="date" placeholder="Date of joining" [(ngModel)]="selected_doj">
+            </td>
+        </tr>
+        <tr>
+            <th>Organisation</th>
+            <td><input type="text" class="input is-primary" [(ngModel)]="org"/></td>
+            <th rowspan="2">Photo</th>
+            <td rowspan="2">
+                <div class="buttons">
+                    <button class="button is-primary" (click)="capture_photo()" [attr.disabled]="is_loading ? true : null">Capture</button>
+                    
+                    <div class="file has-name is-boxed is-small is-primary">
+                        <label class="file-label">
+                            <input class="file-input" type="file" name="photo" accept="image/*" (change)="photo_browsed($event)" [attr.disabled]="is_loading ? true : null">
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">Choose a photo...</span>
+                            </span>
+                            <span class="file-name">{{selected_file_name}}</span>
+                        </label>
+                    </div>
+
+                </div><br/>
+                <img [src]="secure_photo" alt="No image">
+            </td>
+        </tr>
+        <tr>
+            <th>Remarks</th>
+            <td>
+                <textarea class="textarea is-primary is-large" [(ngModel)]="remarks"></textarea>
+            </td>
+        </tr>
+    </table>
+    <button class="button is-primary is-large" (click)="register_user()" [ngClass]="{ 'is-loading': (is_registering || is_loading) }">Register</button>
+</section>
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_photo_modal }" *ngIf="is_open_photo_modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <app-capture-photo  (closed)="close_modal($event)"></app-capture-photo>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="close_modal({ secure: '', encoded: '' })"></button>
+</div>

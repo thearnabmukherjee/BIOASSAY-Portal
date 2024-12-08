@@ -1,0 +1,217 @@
+<section class="">
+	<p class="title">{{title}}</p>
+
+    <!--	Personal details	-->
+
+	<div class="card" *ngIf="person_id > 0">
+		<header class="card-header has-background-primary">
+			<p class="card-header-title has-text-white">Personal details</p>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-down" aria-hidden="true"></i>
+				</span>
+			</button>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-up" aria-hidden="true"></i>
+				</span>
+			</button>
+		</header>
+	
+		<sub-worker-details [hidden]="!is_personal_details_opened" 
+							[person-id]="person_id" 
+							(close)="failed_to_load_worker_details($event)"></sub-worker-details>
+	</div>
+
+
+	<!--	Monitoring details	-->
+
+	<div class="card" *ngIf="mon_id > 0">
+		<header class="card-header has-background-link">
+			<p class="card-header-title has-text-white">Monitoring details</p>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-down" aria-hidden="true"></i>
+				</span>
+			</button>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-up" aria-hidden="true"></i>
+				</span>
+			</button>
+		</header>
+
+		
+		<app-view-monitoring-details [hidden]="!is_monitoring_details_opened" [monitoring-record]="monRecord"></app-view-monitoring-details>
+	</div>
+
+
+    <!--	Create LF analysis	-->
+
+    <div class="card">
+        <header class="card-header has-background-success">
+			<p class="card-header-title has-text-white">{{technique}} analysis details</p>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_LF_details_opened" (click)="is_LF_details_opened = !is_LF_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-down" aria-hidden="true"></i>
+				</span>
+			</button>
+			<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_LF_details_opened" (click)="is_LF_details_opened = !is_LF_details_opened">
+				<span class="icon">
+					<i class="fas fa-angle-up" aria-hidden="true"></i>
+				</span>
+			</button>
+		</header>
+        <div class="card-content" [hidden]="!is_LF_details_opened">
+            
+            <div class="columns is-desktop">
+				<div class="column is-2">Radionuclide</div>
+				<div class="column is-2">{{nuclide_name}}</div>
+				<div class="column is-2">Detector</div>
+				<div class="column is-2">{{detector_name}}</div>
+				<div class="column is-2">Specific activity</div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_specific_activity">
+                </div>
+			</div>
+
+            <div class="columns is-desktop">
+				<div class="column is-2">Sample volume</div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_sample_volume">
+                </div>
+				<div class="column is-2">Analysis volume</div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_analysis_volume">
+                </div>
+				<div class="column is-2">
+                    <span *ngIf="!is_CFM">Total volume</span>
+                    <span *ngIf="is_CFM"></span>
+                </div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_total_volume" *ngIf="!is_CFM">
+                </div>
+			</div>
+
+
+            <div class="columns is-desktop">
+				<div class="column is-2">Name</div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_analysis_name">
+                </div>
+				<div class="column is-2">Sample collection duration</div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_sample_collection_duration">
+                </div>
+				<div class="column is-2">Recovery %</div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_recovery_percent">
+                </div>
+			</div>
+
+            <div class="columns is-desktop">
+				<div class="column is-2">Analysis date</div>
+				<div class="column is-2">
+					<div class="control has-icons-left">
+						<input class="input is-medium" id="dtAnalysis" type="date" placeholder="Analysis date" [(ngModel)]="input_analysis_date">
+					</div>
+				</div>
+				<div class="column is-2">Previous activity</div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_previous_activity">
+                </div>
+				<div class="column is-2">Previous activity error</div>
+				<div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="input_previous_activity_error">
+                </div>
+			</div>
+
+
+            <!--    LF CFM method    -->
+
+            <div class="columns is-desktop" *ngIf="is_CFM">
+                <div class="column is-2">X (Value)</div>
+                <div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="tmp_X">
+                </div>
+                <div class="column is-2">Y (SD)</div>
+                <div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="tmp_Y">
+                </div>
+                <div class="column is-1">
+                    <button class="button" (click)="add_reading()">
+                        <span class="icon is-small">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="column is-3"></div>
+            </div>
+            <div class="columns is-desktop" *ngFor="let r of arrReadings">
+                <div class="column is-2">X (Value)</div>
+                <div class="column is-2">{{r.x}}</div>
+
+                <div class="column is-1">±</div>
+
+                <div class="column is-2">Y (SD)</div>
+                <div class="column is-2">{{r.y}}</div>
+                <div class="column is-1">
+                    <button class="button" (click)="remove_reading(r)">
+                        <span class="icon is-small">
+                            <i class="fas fa-minus"></i>
+                        </span>
+                    </button>
+                </div>
+                <div class="column is-2"></div>
+            </div>
+
+
+            <!--    LF SAM method    -->
+
+            <div class="columns is-desktop" *ngIf="!is_CFM">
+                <div class="column is-2">X (Value)</div>
+                <div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="tmp_X">
+                </div>
+                <div class="column is-2">Y (SD)</div>
+                <div class="column is-2">
+                    <input class="input is-primary" type="text" [(ngModel)]="tmp_Y">
+                </div>
+                <div class="column is-4"></div>
+            </div>
+
+
+            <div class="columns is-desktop">
+                <div class="column is-2">Comments</div>
+				<div class="column is-10">
+                    <textarea class="textarea is-primary" placeholder="Analysis comments...." [(ngModel)]="input_comments" maxlength="512"></textarea>
+                </div>
+            </div>
+
+            <button class="button is-primary is-light" (click)="calculate_result()" [ngClass]="{ 'is-loading': is_calculating }">Calculate</button><br/><br/>
+
+			<article class="message is-primary is-fullwidth">
+				<div class="message-body">
+					<span class="has-text-weight-bold">Calculated activity</span>&nbsp;&nbsp;
+					{{calculated_activity}} ± {{calculated_activity_error}}
+				</div>
+			</article>
+
+
+			<div class="columns is-desktop">
+                <div class="column is-2">Is BDL?</div>
+				<div class="column is-10">
+                    <div class="field">
+						<input class="is-checkradio is-block is-success" [(ngModel)]="is_BDL" type="checkbox" name="kjsdfsdjkf" id="kjsdfsdjkf">
+						<label for="kjsdfsdjkf">Mark it BDL</label>
+					</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-footer">
+			<button class="button is-primary ml-3 mt-3 mb-3 mr-3" (click)="submit_result()" [ngClass]="{ 'is-loading': is_submitting }">Submit</button>
+		</div>
+    </div>
+</section>

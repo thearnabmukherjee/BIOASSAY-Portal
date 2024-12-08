@@ -1,0 +1,106 @@
+<section class="">
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="container is-max-desktop">
+        <div class="card">
+            <header class="card-header has-background-primary">
+                <p class="card-header-title has-text-white">Create new analysis</p>
+            </header>
+            <div class="card-content">
+
+                <!--    Radionuclides    -->
+
+                <div class="columns">
+                    <div class="column is-4">Radionuclide</div>
+                    <div class="column is-8">
+                        <div class="select is-primary is-fullwidth">
+                            <select [ngModel]="selected_radionuclide_id" (ngModelChange)="radionuclide_selection_changed($event)">
+                                <option *ngFor="let n of arrNuclides" [value]="n.id">{{n.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><br/>
+
+
+                <!--    Analysis technique    -->
+
+                <div class="columns">
+                    <div class="column is-4">Technique</div>
+                    <div class="column is-8">
+                        <div class="select is-primary is-fullwidth">
+                            <select [(ngModel)]="selected_technique" (change)="technique_changed($event)">
+                                <option *ngFor="let t of arrTechnique" [value]="t.key">{{t.key}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><br/>
+
+
+                <!--    Isotope    -->
+                
+                <div class="columns" *ngIf="selected_technique == arrTechnique[0].key">
+                    <div class="column is-4">Isotope</div>
+                    <div class="column is-8">
+                        <div class="select is-primary is-fullwidth">
+                            <select [(ngModel)]="selected_isotope_id">
+                                <option *ngFor="let t of arrIsotopes" [value]="t.id">{{t.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><br/>
+
+
+                <!--    Instrument    -->
+
+                <div class="columns">
+                    <div class="column is-4">Instrument</div>
+                    <div class="column is-8">
+                        <div class="select is-primary is-fullwidth">
+                            <select [ngModel]="selected_instrument_id" (ngModelChange)="instrument_selection_changed($event)">
+                                <option *ngFor="let d of arrInstrument" [value]="d.id">{{d.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><br/>
+
+
+                <!--    Detector    -->
+
+                <div class="columns">
+                    <div class="column is-4">Detector</div>
+                    <div class="column is-8">
+                        <div class="select is-primary is-fullwidth">
+                            <select [(ngModel)]="selected_detector_id">
+                                <option *ngFor="let d of arrDetectors" [value]="d.id">{{d.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><br/>
+
+
+                <!--    Tracer    -->
+
+                <div class="columns" *ngIf="selected_technique == arrTechnique[0].key">
+                    <div class="column is-4">Tracer</div>
+                    <div class="column is-8">
+                        <div class="select is-primary is-fullwidth">
+                            <select [(ngModel)]="selected_tracer_id">
+                                <option *ngFor="let d of arrTracer" [value]="d.id">{{d.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><br/>
+
+            </div>
+
+            <div class="card-footer">
+                <p class="card-footer-item">
+                    <button class="button is-primary" (click)="proceed_for_analysis()">Proceed</button>&nbsp;&nbsp;
+                    <button class="button is-danger" (click)="close_modal()">Cancel</button>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

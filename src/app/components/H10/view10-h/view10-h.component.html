@@ -1,0 +1,450 @@
+
+
+<p class="title"> View 10H form</p>
+
+<div class="card" *ngIf="person_id > 0">
+	<header class="card-header has-background-primary">
+		<p class="card-header-title has-text-white">Personal details</p>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-down" aria-hidden="true"></i>
+			</span>
+		</button>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-up" aria-hidden="true"></i>
+			</span>
+		</button>
+	</header>
+
+	<sub-worker-details [hidden]="!is_personal_details_opened" 
+						[person-id]="person_id" 
+						(close)="failed_to_load_worker_details($event)"></sub-worker-details>
+</div>
+
+
+<div class="card" *ngIf="h10_res">
+	<header class="card-header has-background-link">
+		<p class="card-header-title has-text-white">Monitoring details</p>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-down" aria-hidden="true"></i>
+			</span>
+		</button>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-up" aria-hidden="true"></i>
+			</span>
+		</button>
+	</header>
+	<div class="card-content" [hidden]="!is_monitoring_details_opened">
+		
+
+		<!--	Division, Plant and HP	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Division</p>
+			</div>
+			<div class="column is-3">
+				<p>{{division_name}}  </p>
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Plant</p>
+			</div>
+			<div class="column is-3">
+				<p>{{plant_name}}</p>
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">HP</p>
+			</div>
+			<div class="column is-3">
+				<span>{{hp_name}}</span>
+			</div>
+		</div><br/>
+
+
+		<!--	Worker type, TLD and CC	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Worker type</p>
+			</div>
+			<div class="column is-3">
+				<p>{{selected_worker_type}}</p>
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">TLD no</p>
+			</div>
+			<div class="column is-3">
+				<div class="columns">
+					<div class="column">
+						<p>{{selected_tld_fragment}}</p>
+					</div>
+					<div class="column">
+						<span>C</span>
+					</div>
+					<div class="column">
+						<p> {{selected_tld_fragment_last}} </p>
+					</div>
+				</div>
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Comp. Code</p>
+			</div>
+			<div class="column is-3">
+				<div class="columns">
+					<div class="column">
+						<p> {{selected_CC_fragment}}</p>
+					</div>
+					<div class="column">
+						<p> {{selected_CC_fragment_middle}}</p>
+					</div>
+					<div class="column">
+						<p> {{selected_CC_fragment_last}}</p>
+					</div>
+				</div>
+			</div>
+		</div><br/>
+
+
+		<!--	Sample type, duration of collection and date of collection	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Sample type</p>
+			</div>
+			<div class="column is-3">
+				
+				<div class="columns">
+					<div class="column">
+						<p> {{selected_Sample_Type_Fragment}}</p>
+					</div>
+					<div class="column">
+						<p>{{selected_Sample_Type_Fragment_Last}}</p>
+					</div>
+				</div>
+
+				
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Duration of collection</p>
+			</div>
+			<div class="column is-3">
+				
+				<div class="columns">
+					<div class="column">
+						<p>{{selected_collection_duration_fragment}}</p>
+					</div>
+					<div class="column">
+                        <p>{{selected_collection_duration_fragment_last}}</p>
+                    </div>
+				</div>
+
+			</div>
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Date of collection</p>
+			</div>
+			<div class="column field is-3">
+				<p> {{selected_date_of_collection}}</p>
+			</div>
+		</div><br/>
+
+		
+		<!--	Type of monitoring and Nature of type of proccess or operation	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Type of monitoring</p>
+			</div>
+			<div class="column is-3">
+				<p> {{selected_monitoring_type}}</p>
+			</div>
+
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Nature and type of process and operation</p>
+			</div>
+			<div class="column is-3">
+				<p>{{selected_process_type}}</p>
+			</div>
+			<div class="column is-3">
+				<p>{{selected_process_type_other}}</p>
+			</div>
+		</div><br/>
+
+
+		<!--	Probable time of exposure	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-3">
+				<p class="has-text-weight-bold">Probable date, duration and time of exposure</p>
+			</div>
+			<div class="column is-3 field">
+				<p>{{selected_time_of_exposure}}</p>
+			</div>
+			<div class="column is-6">
+				<p>{{selected_time_of_exposure_other}}</p>
+			</div>
+		</div><br/>
+
+		
+		
+		<!--	Brief relavant description	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-3">
+				<p class="has-text-weight-bold">Brief relevant description of incidence</p>
+			</div>
+			<div class="column is-9">
+				<span *ngIf="!selected_brief_description">NA</span>
+				<span *ngIf="selected_brief_description">{{selected_brief_description}}</span>
+			</div>
+		</div><br/>
+
+
+		<!--	Intake routes	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-3">
+				<p class="has-text-weight-bold">Route of intake</p>
+			</div>
+			<div class="column is-9">
+				<!-- <div class="table-container" *ngIf="arrIntakeRoutes.length > 0">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td style="min-width: 150px;" *ngFor="let r of arrIntakeRoutes" class="field">
+									<input class="is-checkradio" disabled [attr.id]="r.ui_name" type="checkbox" [attr.name]="r.ui_name" [checked]="r.is_checked">
+									<label [attr.for]="r.ui_name">{{r.name}}</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> -->
+				<span *ngIf="arrIntakeRoutes.length > 0">{{get_formatted_routes()}}</span>
+				<p *ngIf="arrIntakeRoutes.length == 0">No intake route found!</p>
+			</div>
+		</div><br/>
+
+
+
+		<!--	Radionuclides	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-3">
+				<p class="has-text-weight-bold">Possible radioactive contaminants<span class="mandatory">*</span></p>
+			</div>
+			<div class="column is-9">
+				<!-- <div class="table-container" *ngIf="arrNuclides.length > 0">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td style="min-width: 150px;" *ngFor="let r of arrNuclides" class="field">
+									<input class="is-checkradio" disabled [attr.id]="r.ui_name" type="checkbox" [attr.name]="r.ui_name" [checked]="r.is_checked" >
+									<label [attr.for]="r.ui_name">{{r.name}}</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div> -->
+				<span *ngIf="arrNuclides.length > 0">{{get_formatted_nuclides()}}</span>
+				<p *ngIf="arrNuclides.length == 0">No radionuclide found!</p>
+			</div>
+		</div><br/>
+
+
+		<!--	Last day of iodination and details therapeutic treatment	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Last day of iodination work (For Iodine Handling)</p>
+			</div>
+			<div class="column is-2 field">
+				<span *ngIf="!seleced_iodination_last_date">NA</span>
+				<span *ngIf="seleced_iodination_last_date">{{seleced_iodination_last_date}}</span>
+			</div>
+			<div class="column is-2">
+				<p>{{seleced_iodination_last_date_other}}</p>
+			</div>
+
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Details of therapeutic treatment (if any)</p>
+			</div>
+			<div class="column is-4">
+				<p>{{selected_therapeutic_treatment_details}}</p>
+			</div>
+		</div><br/>
+
+
+
+		<!--	Particle size solubility type and isotopic composition of contaminants	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Particle size and solubility type</p>
+			</div>
+			<div class="column is-2">
+				<p>{{selected_particle_size}}</p>
+			</div>
+			<div class="column is-2">
+				<p>{{selected_particle_size_other}}</p>
+			</div>
+
+			
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Isotopic composition of the contaminants</p>
+			</div>
+			<div class="column is-4">
+				<p>{{selected_isotopic_comp_contaminants}}</p>
+			</div>
+		</div><br/>
+
+
+		<!--	Pu:Am ratio, Class and date of previous monitoring	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Pu:Am ratio</p>
+			</div>
+			<div class="column is-2">
+				<p>{{selected_pu_am_ration}}</p>
+			</div>
+
+
+			<div class="column is-1">
+				<p class="has-text-weight-bold">Solubility type</p>
+			</div>
+			<div class="column is-3">
+				<p>{{selected_class}} {{selected_class_other}}</p>
+			</div>
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Date of previous monitoring (Monitoring Lab)</p>
+			</div>
+			<div class="column is-2">
+				<span *ngIf="!selected_previous_monitoring_date">NA</span>
+				<span *ngIf="selected_previous_monitoring_date">{{selected_previous_monitoring_date}}</span>
+			</div>
+		</div><br/>
+
+
+		<!--	Weight, height, chest circumefrence	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Weight (Kg)</p>
+			</div>
+			<div class="column is-2">
+				<p>
+					<span *ngIf="selected_weight == null || selected_weight <= 0">NA</span>
+					<span *ngIf="selected_weight != null && selected_weight > 0">{{selected_weight}}</span>
+				</p>
+			</div>
+
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Height (cm)</p>
+			</div>
+			<div class="column is-2">
+				<span *ngIf="selected_height == null || selected_height <= 0">NA</span>
+				<span *ngIf="selected_height != null && selected_height > 0">{{selected_height}}</span>
+			</div>
+
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Chest circumference (cm)</p>
+			</div>
+			<div class="column is-2">
+				<span *ngIf="selected_chest_cc == null || selected_chest_cc <= 0">NA</span>
+				<span *ngIf="selected_chest_cc != null && selected_chest_cc > 0">{{selected_chest_cc}}</span>
+			</div>
+		</div><br/>
+
+
+		<!--	Comments	-->
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Comments</p>
+			</div>
+			<div class="column is-10">
+				<p *ngFor="let com of arrSelectedComments">{{com}}</p>
+			</div>
+		</div><br/>
+
+		
+	</div>
+</div>
+
+
+
+<div class="card" *ngIf="h10_res">
+	<header class="card-header has-background-light">
+		<p class="card-header-title has-text-dark">10H form details</p>
+		<button class="card-header-icon has-text-dark" aria-label="more options" *ngIf="is_form_details_opened" (click)="is_form_details_opened = !is_form_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-down" aria-hidden="true"></i>
+			</span>
+		</button>
+		<button class="card-header-icon has-text-dark" aria-label="more options" *ngIf="!is_form_details_opened" (click)="is_form_details_opened = !is_form_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-up" aria-hidden="true"></i>
+			</span>
+		</button>
+	</header>
+	<div class="card-content" [hidden]="!is_form_details_opened">
+		
+		
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Form id</p>
+			</div>
+			<div class="column is-2">
+				<p>{{form_id}}</p>
+			</div>
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Status</p>
+			</div>
+			<div class="column is-2">
+				<p>{{h10_res.status}}</p>
+			</div>
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Completion date</p>
+			</div>
+			<div class="column is-2">
+				<span *ngIf="h10_res.completionDate">{{h10_res.completionDate}}</span>
+				<span *ngIf="!h10_res.completionDate">NA</span>
+			</div>
+		</div>
+
+
+		<div class="columns is-desktop">
+			<div class="column is-2">
+				<p class="has-text-weight-bold">HP token</p>
+			</div>
+			<div class="column is-2">
+				<p>{{h10_res.hpToken}}</p>
+			</div>
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Submitted on</p>
+			</div>
+			<div class="column is-2">
+				<p>{{h10_res.created_on}}</p>
+			</div>
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Submitted by</p>
+			</div>
+			<div class="column is-2">
+				<span>{{h10_res.creater_name}}</span>
+			</div>
+		</div>
+
+
+	</div>
+</div>

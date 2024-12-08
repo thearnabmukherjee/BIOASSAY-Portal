@@ -1,0 +1,10 @@
+.table.is-borderless td, .table.is-borderless th 
+{
+	border: 0;
+}
+
+.comments
+{
+	@extend .has-text-justified !optional;
+	word-break: break-all;
+}

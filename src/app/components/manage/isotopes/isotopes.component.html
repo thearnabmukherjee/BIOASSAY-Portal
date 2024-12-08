@@ -1,0 +1,143 @@
+<section class="section">
+    <div class="title is-2">
+        List of Isotopes
+    </div>
+
+    <progress class="progress is-small is-primary" max="100" *ngIf="is_loading"></progress>
+    <p *ngIf="is_loading">Loading. Please wait.....</p>
+
+    <div class="has-text-right">
+        <button class="button is-warning" (click)="open_new_isotope_dialog()">Add New</button>
+    </div>
+    
+    <p class="has-text-right" *ngIf="!is_loading">{{arrRecords.length}} record(s) found!</p>
+    
+    <div class="table-container">
+        <table class="table is-striped is-fullwidth  is-hoverable" *ngIf="arrRecords.length > 0 && !is_loading" >
+    
+                <tr class="has-background-primary ">
+                    <td class="has-text-white is-size-4"> Id</td>
+                    <td class="has-text-white is-size-4"> Name </td>
+                    <td class="has-text-white is-size-4"> Nuclide </td>
+                    <td class="has-text-white is-size-4"> Is tracer? </td>
+                    <td class="has-text-white is-size-4"> Half life </td>
+                    <td class="has-text-white is-size-4"> Specific activity </td>
+                    <td class="has-text-white is-size-4"> Is enabled? </td>
+                    <td class="has-text-white is-size-4"> Created on </td>
+                    <td class="has-text-white is-size-4"> Created by </td>
+                </tr>
+                
+                <tr *ngFor="let d of arrRecords">
+                    <td>{{d.id}}</td>
+                    <td>{{d.name}}</td>
+                    <td>
+                        <sup>{{split_nuclide(get_nuclide_name(d.nuclide_id))[0]}}</sup>
+                        {{split_nuclide(get_nuclide_name(d.nuclide_id))[1]}}
+                        <sup>{{split_nuclide(get_nuclide_name(d.nuclide_id))[2]}}</sup>
+                    </td>
+                    <td>
+                        <span *ngIf="d.is_tracer">Yes</span>
+                        <span *ngIf="!d.is_tracer">No</span>
+
+                        &nbsp;
+                        <button class="button is-danger is-small" *ngIf="d.is_tracer" (click)="manage_isotope_attributes(d, false, d.half_life, d.specific_activity)">Not a tracer</button>
+                        <button class="button is-primary is-small" *ngIf="!d.is_tracer" (click)="manage_isotope_attributes(d, true, d.half_life, d.specific_activity)">Make tracer</button>
+                    </td>
+                    <td>
+                        {{d.half_life}} &nbsp; 
+                        <button class="button is-danger is-small" (click)="change_half_life(d)">Change</button>
+                    </td>
+                    <td>
+                        {{d.specific_activity}} &nbsp; 
+                        <button class="button is-danger is-small" (click)="change_specific_activity(d)">Change</button>
+                    </td>
+                    <td>
+                        <span *ngIf="d.is_active">Yes</span>
+                        <span *ngIf="!d.is_active">No</span>
+
+                        &nbsp;
+                        <button class="button is-danger is-small" *ngIf="d.is_active" (click)="manage_activation(d.id, false)">De-activate</button>
+                        <button class="button is-primary is-small" *ngIf="!d.is_active" (click)="manage_activation(d.id, true)">Activate</button>
+                    </td>
+                    <td>{{d.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY, h:mm:ss a'}}</td>
+                    <td>{{d.created_by_name}}</td>
+                </tr>
+        </table>
+        <p class="is-italic" *ngIf="arrRecords.length == 0 && !is_loading">No isotope found!</p>
+    </div>
+</section>
+
+
+
+<div class="modal" [ngClass]="{ 'is-active': is_open_modal }" *ngIf="is_open_modal">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<div class="box">
+			
+            <p class="title">New isotope</p>
+
+            <!--    Name    -->
+
+            <div class="columns">
+                <div class="column is-4">Name</div>
+                <div class="column is-8">
+                    <input class="input is-primary is-fullwidth" type="text" placeholder="Isotope name" [(ngModel)]="name" maxlength="50">
+                </div>
+            </div><br/>
+
+
+            <!--    Radionuclide    -->
+
+            <div class="columns">
+                <div class="column is-4">Radionuclide</div>
+                <div class="column is-8">
+                    <div class="select is-primary is-fullwidth">
+                        <select [ngModel]="nuc_id" (ngModelChange)="radionuclide_selection_changed($event)">
+                            <option *ngFor="let n of arrNuclides" [value]="n.id">{{n.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div><br/>
+
+
+            <!--    Is tracer?    -->
+
+            <div class="columns">
+                <div class="column is-4">Is tracer?</div>
+                <div class="column is-8">
+                    <div class="field">
+                        <input id="tglTracer" type="checkbox" name="switchRoundedDefault" [(ngModel)]="is_tracer" class="switch is-rounded">
+                        <label for="tglTracer" *ngIf="is_tracer">Yes</label>
+                        <label for="tglTracer" *ngIf="!is_tracer">No</label>
+                    </div>
+                </div>
+            </div><br/>
+
+
+            <!--    Half life    -->
+
+            <div class="columns">
+                <div class="column is-4">Half life</div>
+                <div class="column is-8">
+                    <input class="input is-primary is-fullwidth" type="text" placeholder="Isotope half life" [(ngModel)]="half_life">
+                </div>
+            </div><br/>
+
+
+            <!--    Specific activity    -->
+
+            <div class="columns">
+                <div class="column is-4">Specific activity</div>
+                <div class="column is-8">
+                    <input class="input is-primary is-fullwidth" type="text" placeholder="Isotope specific activity" [(ngModel)]="specific_activity">
+                </div>
+            </div><br/>
+
+			<button class="button is-danger is-pulled-left" (click)="close_modal()">Cancel</button>
+			<button class="button is-primary is-pulled-right" (click)="create_new_isotope()">Create</button>
+			<br/>
+			<br/>
+		</div>
+	</div>
+	<button class="modal-close is-large" aria-label="close" (click)="close_modal()"></button>
+</div>

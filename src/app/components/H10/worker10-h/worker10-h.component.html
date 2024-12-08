@@ -1,0 +1,12 @@
+<section>
+    <div class="title is-2">
+        10H forms <span *ngIf="personal_details_obj">of {{personal_details_obj.name}}</span>
+    </div>
+
+	<div class="has-text-right">
+        <button class="button is-warning" (click)="create_new_10H()">Add New</button>
+    </div>
+
+	<h10-list [person-id]="person_id" (navigate)="navigate_to_url($event)"></h10-list>
+
+</section>

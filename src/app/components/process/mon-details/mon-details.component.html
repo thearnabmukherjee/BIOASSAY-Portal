@@ -1,0 +1,219 @@
+
+<h1 class="title">Monitoring details</h1>
+
+<progress class="progress is-small is-primary" style="height: 5px;" max="100" *ngIf="is_loading"></progress>
+
+<div class="card" *ngIf="personal_details_obj != null && res_10H != null">
+	<header class="card-header has-background-primary">
+		<p class="card-header-title has-text-white">Relevant details</p>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-down" aria-hidden="true"></i>
+			</span>
+		</button>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_personal_details_opened" (click)="is_personal_details_opened = !is_personal_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-up" aria-hidden="true"></i>
+			</span>
+		</button>
+	</header>
+	<div class="card-content" [hidden]="is_loading || !is_personal_details_opened" *ngIf="personal_details_obj != null && res_10H != null">
+		<div class="columns is-desktop">
+
+			<div class="column">
+				<p class="has-text-weight-bold">Name</p>
+			</div>
+			<div class="column">
+				<p>{{personal_details_obj.name}}</p>
+			</div>
+
+
+			<div class="column">
+				<p class="has-text-weight-bold">Division</p>
+			</div>
+			<div class="column">
+				<p>{{res_10H.division_name}}</p>
+			</div>
+
+
+			<div class="column">
+				<p class="has-text-weight-bold">Plant</p>
+			</div>
+			<div class="column">
+				<p>{{res_10H.plant_name}}</p>
+			</div>
+
+		</div>
+
+		<div class="columns is-desktop">
+
+			<div class="column">
+				<p class="has-text-weight-bold">TLD</p>
+			</div>
+			<div class="column">
+				<p>{{selected_tld_no}}</p>
+			</div>
+
+
+			<div class="column">
+				<p class="has-text-weight-bold">Worker type</p>
+			</div>
+			<div class="column">
+				<p>{{res_10H.worker_type}}</p>
+			</div>
+
+
+			<div class="column">
+				<p class="has-text-weight-bold">CC no</p>
+			</div>
+			<div class="column">
+				<p>{{selected_cc_no}}</p>
+			</div>
+
+		</div>
+
+		<div class="columns is-desktop">
+
+			<div class="column">
+				<p class="has-text-weight-bold">Sample collected on</p>
+			</div>
+			<div class="column">
+				<p>{{res_10H.collectionDate}}</p>
+			</div>
+
+
+			<div class="column">
+				<p class="has-text-weight-bold">HP token</p>
+			</div>
+			<div class="column">
+				<p>{{res_10H.hpToken}}</p>
+			</div>
+
+
+			<div class="column">
+				<p class="has-text-weight-bold">Monitoring type</p>
+			</div>
+			<div class="column">
+				<p>{{res_10H.tom}}</p>
+			</div>
+
+		</div>
+
+
+		<div class="columns is-desktop">
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Radionuclides</p>
+			</div>
+			<div class="column">
+				<p>{{selected_radionuclides}}</p>
+			</div>
+
+
+			<div class="column is-2">
+				<button class="button is-primary is-outlined" (click)="view_10H_form()">View 10H</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<div class="card" *ngIf="mon_obj">
+	<header class="card-header has-background-link">
+		<p class="card-header-title has-text-white">Monitoring details</p>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-down" aria-hidden="true"></i>
+			</span>
+		</button>
+		<button class="card-header-icon has-text-white" aria-label="more options" *ngIf="!is_monitoring_details_opened" (click)="is_monitoring_details_opened = !is_monitoring_details_opened">
+			<span class="icon">
+				<i class="fas fa-angle-up" aria-hidden="true"></i>
+			</span>
+		</button>
+	</header>
+	<div class="card-content" [hidden]="is_loading || !is_monitoring_details_opened">
+
+		<div class="columns is-desktop">
+
+			
+			<!--	Sample weight	-->
+
+			<ng-container  *ngIf="mon_obj.sample_weight != null && mon_obj.sample_weight > 0">
+				<div class="column is-2">
+					<p class="has-text-weight-bold">Sample weight (g)</p>
+				</div>
+				<div class="column is-2">
+					{{mon_obj.sample_weight}}
+				</div>
+			</ng-container>
+
+
+			<!--	Sample volume	-->
+
+			<ng-container *ngIf="mon_obj.sample_vol != null && mon_obj.sample_vol > 0">
+				<div class="column is-2">
+					<p class="has-text-weight-bold">Sample vol. (ml)</p>
+				</div>
+				<div class="column is-2">
+					{{mon_obj.sample_vol}}
+				</div>
+			</ng-container>
+
+
+
+			<!--	Sample number	-->
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Sample #</p>
+			</div>
+			<div class="column is-2 field">
+				{{mon_obj.sample_no}}
+			</div>
+
+
+			
+			<!--	Received on	-->
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Received on</p>
+			</div>
+			<div class="column is-2">
+				{{mon_obj.received_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY'}}
+			</div>
+
+
+		</div>
+
+
+		<div class="columns is-desktop">
+
+			<!--	Accepted on	-->
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Accepted on</p>
+			</div>
+			<div class="column is-2">
+				{{mon_obj.created_on | amParse: 'YYYY-MM-DD HH:mm:ss' | amDateFormat: 'MMMM Do YYYY'}}
+			</div>
+
+			
+			
+			<!--	Remarks	-->
+
+			<div class="column is-2">
+				<p class="has-text-weight-bold">Remarks</p>
+			</div>
+			<div class="column is-6 field">
+				<div class="control">
+					<span *ngIf="mon_obj.remarks">{{mon_obj.remarks}}</span>
+					<span *ngIf="!mon_obj.remarks">-NA-</span>
+				</div>
+			</div>
+
+		</div>
+
+
+	</div>
+</div>
